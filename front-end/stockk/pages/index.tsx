@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { LoginForm } from '../components/LoginForm';
 
 const Home: React.FC = () => {
     return (
@@ -22,6 +23,7 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <LoginForm />
         </>
     );
 };
