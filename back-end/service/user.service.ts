@@ -40,12 +40,14 @@ const hashPassword = async (password: string): Promise<string> => {
 const loginUser = async ({ email, password }: UserInput): Promise<string> => {
     // get user by email
     const user = userRepository.findByEmail(email);
+    console.log('user found by email: ', user);
     if (!user) {
         throw new Error('Email is incorrect.');
     }
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = password === user.password;
+
     if (!isValidPassword) {
-        throw new Error('Email and/or password is incorrect.');
+        throw new Error('Password is incorrect.');
     }
     return generateJwtToken(email);
 };

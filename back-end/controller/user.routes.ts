@@ -125,8 +125,8 @@ userRouter.post('/login', async (req: Request, res: Response) => {
         const response = { token: token, role: role };
         res.status(200).json(response);
     } catch (error) {
-        const errorMessage = (error as Error).message;
-        res.status(401).json({ status: 'error', errorMessage: errorMessage });
+        const err = error as Error;
+        res.status(500).json({ status: 'error', errorMessage: err.message });
     }
 });
 
