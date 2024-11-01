@@ -21,7 +21,6 @@ const Home: React.FC = () => {
                         <h1 className="text-white text-4xl mb-8">Stockk - A stock counting app</h1>
                         <div className="flex-grow flex items-center justify-between"></div>
                         <LoginForm />
-                        <p>{sessionStorage.getItem('username')}</p>
                     </div>
                 </div>
             </div>
