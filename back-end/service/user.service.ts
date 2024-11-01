@@ -71,7 +71,16 @@ const createUser = async ({
     return { message: 'User registered successfully', user: newUser };
 };
 
+const getUserRoleByEmail = async (email: string): Promise<string> => {
+    const user = userRepository.findByEmail(email);
+    if (!user) {
+        throw new Error('Email is incorrect.');
+    }
+    return user.role;
+};
+
 export default {
     createUser,
     loginUser,
+    getUserRoleByEmail,
 };
