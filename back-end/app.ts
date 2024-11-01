@@ -4,6 +4,7 @@ import cors from 'cors';
 import * as bodyParser from 'body-parser';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import userRouter from './controller/user.routes';
 
 const app: Express = express();
 dotenv.config();
@@ -21,7 +22,7 @@ if (!jwtSecret) {
 }
 
 //* Routes
-// app.use('/users', userRouter);
+app.use('/users', userRouter);
 
 //* Swagger
 const swaggerOpts = {
@@ -32,7 +33,7 @@ const swaggerOpts = {
             version: '1.0.0',
         },
     },
-    apis: ['*src/controller/*.ts'],
+    apis: ['*controller/*.ts'],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOpts);
