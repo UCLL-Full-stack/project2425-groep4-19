@@ -20,10 +20,11 @@ const Home: React.FC = () => {
                     <div className="flex flex-col items-center justify-center flex-grow">
                         <h1 className="text-white text-4xl mb-8">Stockk - A stock counting app</h1>
                         <div className="flex-grow flex items-center justify-between"></div>
+                        <LoginForm />
+                        <p>{sessionStorage.getItem('username')}</p>
                     </div>
                 </div>
             </div>
-            <LoginForm />
         </>
     );
 };
