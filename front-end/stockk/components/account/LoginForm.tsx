@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 export const LoginForm = () => {
-    const [email, setEmail] = useState('');
-    const [emailError, setEmailError] = useState('');
+    const [username, setUsername] = useState('');
+    const [usernameError, setUsernameError] = useState('');
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [loginError, setLoginError] = useState('');
@@ -12,8 +12,8 @@ export const LoginForm = () => {
 
     const validate = () => {
         let result = true;
-        if (email.length === 0) {
-            setEmailError('Email is incorrect');
+        if (username.length === 0) {
+            setUsernameError('Email is incorrect');
             result = false;
         }
 
@@ -25,7 +25,7 @@ export const LoginForm = () => {
     };
 
     const clearErrors = () => {
-        setEmailError('');
+        setUsernameError('');
         setPasswordError('');
         setLoginError('');
     };
@@ -39,11 +39,11 @@ export const LoginForm = () => {
         }
 
         try {
-            console.log('Email: ', email, 'Password: ', password);
-            const data = await UserService.userLogin({ email, password });
+            console.log('Username: ', username, 'Password: ', password);
+            const data = await UserService.userLogin({ username, password });
             console.log('Login response data:', data); // Log the response data
             if (data && data.token) {
-                sessionStorage.setItem('username', email);
+                sessionStorage.setItem('username', username);
                 sessionStorage.setItem('token', JSON.stringify(data.token));
                 console.log('Successful login'); // Log successful login
                 router.push('/');
@@ -54,7 +54,7 @@ export const LoginForm = () => {
         } catch (error: any) {
             console.error('Login error:', error.message); // Log the error message
             if (error.message === 'Email is incorrect.') {
-                setEmailError('Email is incorrect'); // Set email error message
+                setUsernameError('Username is incorrect'); // Set username error message
             } else if (error.message === 'Password is incorrect.') {
                 setPasswordError('Password is incorrect'); // Set password error message
             } else {
@@ -70,15 +70,17 @@ export const LoginForm = () => {
                 <div className="space-y-16 flex flex-col items-center justify-center">
                     <div className="flex flex-col items-center justify-center">
                         <input
-                            type="email"
-                            id="email"
-                            placeholder="Email"
+                            type="text"
+                            id="username"
+                            placeholder="Username"
                             style={{ width: '550px' }}
                             className="px-4 py-5 text-3xl bg-gray-200 rounded-lg text-text placeholder-text"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
-                        {emailError && <p className="text-red-500 text-xl pt-2">{emailError}</p>}
+                        {usernameError && (
+                            <p className="text-red-500 text-xl pt-2">{usernameError}</p>
+                        )}
                     </div>
                     <div className="flex flex-col items-center justify-center ">
                         <input

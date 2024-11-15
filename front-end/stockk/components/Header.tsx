@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
     const handleLogout = () => {
         setLoggedInUser(null);
         sessionStorage.clear();
-        router.push('/');
+        router.push('/login');
     };
 
     useEffect(() => {

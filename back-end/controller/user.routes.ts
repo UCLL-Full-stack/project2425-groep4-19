@@ -84,12 +84,12 @@ userRouter.post('/', async (req: Request, res: Response) => {
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               username:
  *                 type: string
  *               password:
  *                 type: string
  *             required:
- *               - email
+ *               - username
  *               - password
  *     responses:
  *       200:
@@ -120,7 +120,7 @@ userRouter.post('/login', async (req: Request, res: Response) => {
     // POST request to login
     try {
         const user = <UserInput>req.body;
-        const role = await userService.getUserRoleByEmail(user.email);
+        const role = await userService.getUserRoleByUsername(user.username);
         const token = await userService.loginUser(user);
         const response = { token: token, role: role };
         res.status(200).json(response);

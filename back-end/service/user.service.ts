@@ -37,9 +37,9 @@ const hashPassword = async (password: string): Promise<string> => {
 };
 
 //* Login user
-const loginUser = async ({ email, password }: UserInput): Promise<string> => {
-    // get user by email
-    const user = userRepository.findByEmail(email);
+const loginUser = async ({ username, password }: UserInput): Promise<string> => {
+    // get user by username
+    const user = userRepository.findByUsername(username);
     console.log('user found by email: ', user);
     if (!user) {
         throw new Error('Email is incorrect.');
@@ -49,7 +49,7 @@ const loginUser = async ({ email, password }: UserInput): Promise<string> => {
     if (!isValidPassword) {
         throw new Error('Password is incorrect.');
     }
-    return generateJwtToken(email);
+    return generateJwtToken(username);
 };
 
 //* Create new user
@@ -75,10 +75,10 @@ const createUser = async ({
     return { message: 'User registered successfully', token: token };
 };
 
-const getUserRoleByEmail = async (email: string): Promise<string> => {
-    const user = userRepository.findByEmail(email);
+const getUserRoleByUsername = async (username: string): Promise<string> => {
+    const user = userRepository.findByUsername(username);
     if (!user) {
-        throw new Error('Email is incorrect.');
+        throw new Error('Username is incorrect.');
     }
     return user.role;
 };
@@ -86,5 +86,5 @@ const getUserRoleByEmail = async (email: string): Promise<string> => {
 export default {
     createUser,
     loginUser,
-    getUserRoleByEmail,
+    getUserRoleByUsername,
 };
