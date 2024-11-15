@@ -39,6 +39,7 @@ export const LoginForm = () => {
         }
 
         try {
+            console.log('Email: ', email, 'Password: ', password);
             const data = await UserService.userLogin({ email, password });
             console.log('Login response data:', data); // Log the response data
             if (data && data.token) {

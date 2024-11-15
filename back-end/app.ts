@@ -13,6 +13,10 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
+//* Middleware
+app.use(cors({ origin: 'http://localhost:8080' }));
+app.use(bodyParser.json());
+
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
@@ -57,10 +61,6 @@ const swaggerOpts = {
 
 const swaggerSpec = swaggerJsDoc(swaggerOpts);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-//* Middleware
-app.use(cors({ origin: process.env.CORS_ORIGIN }));
-app.use(bodyParser.json());
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
