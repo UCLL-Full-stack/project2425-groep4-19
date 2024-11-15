@@ -11,7 +11,7 @@ const Stock: React.FC = () => {
 
     useEffect(() => {
         // Fetch stock data from the backend
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/stock`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -31,7 +31,7 @@ const Stock: React.FC = () => {
 
     const handleQuantityChange = (id: string, quantity: number) => {
         // Update stock quantity in the backend
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/stock/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
