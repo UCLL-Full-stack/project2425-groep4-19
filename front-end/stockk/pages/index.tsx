@@ -2,8 +2,10 @@ import React from 'react';
 import Head from 'next/head';
 import { LoginForm } from '../components/login/LoginForm';
 import Navbar from '../components/Header'; // Adjust the path as necessary
+import { useRouter } from 'next/router';
 
 const Home: React.FC = () => {
+    const router = useRouter();
     return (
         <>
             <Head>
@@ -24,10 +26,20 @@ const Home: React.FC = () => {
                     <p className="text-4xl font-light">Please log in or register</p>
                     <div className="flex flex-row space-x-8 pt-10">
                         <div className="bg-primary px-20 py-5 border rounded-lg">
-                            <button className="text-4xl font-bold ">Login</button>
+                            <button
+                                className="text-4xl font-bold"
+                                onClick={async () => await router.push('/login')}
+                            >
+                                Login
+                            </button>
                         </div>
                         <div className="bg-secondary px-14 py-5 border rounded-lg">
-                            <button className="text-4xl font-bold ">Register</button>
+                            <button
+                                className="text-4xl font-bold"
+                                onClick={async () => await router.push('/register')}
+                            >
+                                Register
+                            </button>
                         </div>
                     </div>
                 </div>

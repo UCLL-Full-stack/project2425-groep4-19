@@ -5,7 +5,9 @@ const Navbar: React.FC = () => {
     return (
         <nav className="bg-background p-4 border-b border-gray-400">
             <div className="flex justify-between items-center">
-                <h1 className="font-bold text-7xl pl-3">Stockk</h1>
+                <a href="/">
+                    <h1 className="font-bold text-7xl pl-3">Stockk</h1>
+                </a>
                 <div className="flex space-x-16 text-text font-medium text-5xl px-8">
                     <Link href="/login" legacyBehavior>
                         <a>Login</a>
