@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { LoginForm } from '../components/login/LoginForm';
+import { LoginForm } from '../components/account/LoginForm';
 import Navbar from '../components/Header'; // Adjust the path as necessary
 import { useRouter } from 'next/router';
 

@@ -58,7 +58,7 @@ const createUser = async ({
     username,
     password,
     role,
-}: UserInput): Promise<{ message: string; user: User }> => {
+}: UserInput): Promise<{ message: string; token: string }> => {
     // Check if user already exists
     const allUsers = await userRepository.getAllUsers();
     if (allUsers.map((user) => user.email).includes(email)) {
@@ -68,9 +68,11 @@ const createUser = async ({
     // Hash password and create user
     const hashedPassword = await hashPassword(password);
     const newUser = new User({ email, username, password: hashedPassword, role });
-    await userRepository.createUser(newUser);
 
-    return { message: 'User registered successfully', user: newUser };
+    await userRepository.createUser(newUser);
+    const token = generateJwtToken(email);
+
+    return { message: 'User registered successfully', token: token };
 };
 
 const getUserRoleByEmail = async (email: string): Promise<string> => {
