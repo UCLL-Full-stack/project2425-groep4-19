@@ -6,6 +6,7 @@
         "start": "npm run dev"
     },
     "dependencies": {
+        "@fontsource/inter": "^5.1.0",
         "@types/react": "18.0.28",
         "bootstrap": "5.2.3",
         "chart.js": "^4.4.6",
