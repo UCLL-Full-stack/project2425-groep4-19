@@ -1,5 +1,8 @@
+import React from 'react';
 import Head from 'next/head';
 import { LoginForm } from '../components/LoginForm';
+import Navbar from '../components/navbar'; // Adjust the path as necessary
+
 
 const Home: React.FC = () => {
     return (
@@ -19,6 +22,7 @@ const Home: React.FC = () => {
                 <div className="bg-custom-image bg-cover bg-center min-h-screen pt-3 flex flex-col items-center">
                     <div className="flex flex-col items-center justify-center flex-grow">
                         <h1 className="text-white text-4xl mb-8">Stockk - A stock counting app</h1>
+                        <Navbar />
                         <div className="flex-grow flex items-center justify-between"></div>
                         <LoginForm />
                     </div>

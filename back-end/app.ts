@@ -2,17 +2,38 @@ import * as dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import * as bodyParser from 'body-parser';
-import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import userRouter from './controller/user.routes';
 
 const app: Express = express();
-dotenv.config();
-const port = process.env.APP_PORT || 3000;
 
-//* Middlewares
-app.use(cors());
-app.use(bodyParser.json());
+import stockController from './controller/stock.routes';
+import swaggerJsDoc from 'swagger-jsdoc';
+import cors from 'cors';
+
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+const swaggerOptions = {
+    swaggerDefinition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Stock API',
+            version: '1.0.0',
+            description: 'API for managing stock items',
+        },
+        servers: [
+            {
+                url: `http://localhost:${port}`,
+            },
+        ],
+    },
+    apis: ['./controller/*.ts'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 //* JWT Secret
 const jwtSecret = process.env.JWT_SECRET;
@@ -39,6 +60,11 @@ const swaggerOpts = {
 const swaggerSpec = swaggerJSDoc(swaggerOpts);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.listen(port || 3000, () => {
-    console.log(`Back-end is running on port ${port}.`);
+app.use(cors({ origin: process.env.CORS_ORIGIN }));
+app.use(bodyParser.json());
+
+app.use('/stock', stockController);
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 });
