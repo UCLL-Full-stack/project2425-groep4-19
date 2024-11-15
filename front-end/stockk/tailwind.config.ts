@@ -16,6 +16,7 @@ const config: Config = {
                 primary: '#ADBE55',
                 secondary: '#9FDBA0',
                 accent: '#6FC887',
+                input: '#0D0F05',
             },
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],

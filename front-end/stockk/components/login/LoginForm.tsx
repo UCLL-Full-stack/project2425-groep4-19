@@ -63,53 +63,43 @@ export const LoginForm = () => {
     };
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-600 flex justify-center h-screen mx-3 font-barlow">
+        <section className=" flex justify-center h-screen mx-3 ">
             <form className="space-y-4 md:space-y-6" onSubmit={handleLogin}>
-                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 py-8">
-                    Login:
-                </h1>
-                <div className="flex flex-col items-center justify-center lg:py-0">
-                    <label
-                        className="block mb-2 text-sm font-medium text-gray dark:text-white"
-                        htmlFor="email"
-                    >
-                        Email
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-primary-600 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
+                <h1 className="mt-32 text-6xl font-bold mb-24">Login</h1>
+                <div className="space-y-16 flex flex-col items-center justify-center">
+                    <div className="flex flex-col items-center justify-center">
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Email"
+                            style={{ width: '550px' }}
+                            className="px-4 py-5 text-3xl bg-gray-200 rounded-lg text-text placeholder-text"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        {emailError && <p className="text-red-500 text-xl pt-2">{emailError}</p>}
+                    </div>
+                    <div className="flex flex-col items-center justify-center ">
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Password"
+                            style={{ width: '550px' }}
+                            className="px-4 py-5 text-3xl bg-gray-200 rounded-lg text-text placeholder-text"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        {passwordError && (
+                            <p className="text-red-500 text-xl pt-2">{passwordError}</p>
+                        )}
+                    </div>
+                    <div className="bg-primary px-20 py-5 border rounded-lg">
+                        <button className="text-4xl font-bold" type="submit">
+                            Login
+                        </button>
+                    </div>
+                    {loginError && <p className="text-red-500 text-xl mt-2">{loginError}</p>}{' '}
                 </div>
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
-                    <label
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        htmlFor="password"
-                    >
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-primary-600 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
-                </div>
-                <div>
-                    <button
-                        type="submit"
-                        className="bg-gray-50 border border-gray-300 text-black w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                    >
-                        Login
-                    </button>
-                </div>
-                {loginError && <p className="text-red-500 text-sm mt-2">{loginError}</p>}{' '}
-                {/* Display login error message */}
             </form>
         </section>
     );
