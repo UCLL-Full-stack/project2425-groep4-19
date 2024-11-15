@@ -1,7 +1,12 @@
 import * as dotenv from 'dotenv';
-import express from 'express';
+import express, { Express, Request, Response } from 'express';
+import cors from 'cors';
 import * as bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
+import userRouter from './controller/user.routes';
+
+const app: Express = express();
+
 import stockController from './controller/stock.routes';
 import swaggerJsDoc from 'swagger-jsdoc';
 import cors from 'cors';
@@ -30,9 +35,34 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
+//* JWT Secret
+const jwtSecret = process.env.JWT_SECRET;
+
+if (!jwtSecret) {
+    console.error('JWT_SECRET is not defined. Please set it in your environment variables.');
+}
+
+//* Routes
+app.use('/users', userRouter);
+
+//* Swagger
+const swaggerOpts = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Stockk API',
+            version: '1.0.0',
+        },
+    },
+    apis: ['*controller/*.ts'],
+};
+
+const swaggerSpec = swaggerJSDoc(swaggerOpts);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use(cors({ origin: process.env.CORS_ORIGIN }));
 app.use(bodyParser.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 app.use('/stock', stockController);
 
 app.listen(port, () => {

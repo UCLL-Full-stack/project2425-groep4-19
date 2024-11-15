@@ -11,7 +11,6 @@ export class User {
         this.password = user.password;
         this.role = user.role;
     }
-
     // Validate user input
     validate(user: { email: string; username: string; password: string; role: string }) {
         if (!user.email?.trim()) {
