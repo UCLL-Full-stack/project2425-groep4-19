@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { LoginForm } from '../components/account/LoginForm';
 import Navbar from '../components/Header'; // Adjust the path as necessary
 import { useRouter } from 'next/router';
+import NotLoggedIn from '@components/homepage/NotLoggedIn';
+import NotAssignedToOrganisation from '@components/homepage/NotAssignedToOrganisation';
 
 const Home: React.FC = () => {
+    const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
     const router = useRouter();
+
+    useEffect(() => {
+        const username = sessionStorage.getItem('username');
+        const token = sessionStorage.getItem('token');
+
+        if (username && token) {
+            setLoggedInUser(username);
+        } else {
+            setLoggedInUser(null);
+        }
+    }, []);
+
     return (
         <>
             <Head>
@@ -21,28 +36,10 @@ const Home: React.FC = () => {
 
             <Navbar />
             <div className="relative bg-background">
-                <div className=" min-h-screen pt-3 flex flex-col items-center flex-grow space-y-8">
-                    <h1 className="text-6xl font-bold mt-52">Welcome to Stockk</h1>
-                    <p className="text-4xl font-light">Please log in or register</p>
-                    <div className="flex flex-row space-x-8 pt-10">
-                        <div className="bg-primary px-20 py-5 border rounded-lg">
-                            <button
-                                className="text-4xl font-bold"
-                                onClick={async () => await router.push('/login')}
-                            >
-                                Login
-                            </button>
-                        </div>
-                        <div className="bg-secondary px-14 py-5 border rounded-lg">
-                            <button
-                                className="text-4xl font-bold"
-                                onClick={async () => await router.push('/register')}
-                            >
-                                Register
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <>
+                    {!loggedInUser && <NotLoggedIn />}
+                    {loggedInUser && <NotAssignedToOrganisation username={loggedInUser} />}
+                </>
             </div>
         </>
     );
