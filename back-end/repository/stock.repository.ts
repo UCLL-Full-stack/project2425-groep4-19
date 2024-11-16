@@ -1,26 +1,37 @@
 import { StockItem } from '../model/stockItem';
+import database from '../util/database';
 
-let stockItems: StockItem[] = [
-    new StockItem({ id: '1', name: 'Item 1', quantity: 10 }),
-    new StockItem({ id: '2', name: 'Item 2', quantity: 20 }),
-    new StockItem({ id: '3', name: 'Item 3', quantity: 30 }),
-    new StockItem({ id: '4', name: 'Item 4', quantity: 40 }),
-    new StockItem({ id: '5', name: 'Item 5', quantity: 50 }),
-];
-
-export const getAllStockItems = (): StockItem[] => {
-    return stockItems;
-};
-
-export const getStockItemById = (id: string): StockItem | undefined => {
-    return stockItems.find(item => item.id === id);
-};
-
-export const updateStockItem = (id: string, quantity: number): StockItem | undefined => {
-    const item = stockItems.find(item => item.id === id);
-    if (item) {
-        item.quantity = quantity;
-        return item;
+export const getAllStockItems = async (): Promise<StockItem[]> => {
+    try {
+        const stockItems = await database.stockItem.findMany();
+        return stockItems.map((stockItem) => StockItem.from(stockItem));
+    } catch (error) {
+        throw new Error(`Error getting stock items: ${error}`);
     }
-    return undefined;
+};
+
+export const getStockItemById = async (id: number): Promise<StockItem | undefined> => {
+    try {
+        const stockItem = await database.stockItem.findFirst({
+            where: { id: id },
+        });
+        return stockItem ? StockItem.from(stockItem) : undefined;
+    } catch (error) {
+        throw new Error(`Error getting stock item: ${error}`);
+    }
+};
+
+export const updateStockItem = async (
+    id: number,
+    quantity: number
+): Promise<StockItem | undefined> => {
+    try {
+        const updatedStockItem = await database.stockItem.update({
+            where: { id: id },
+            data: { quantity: quantity },
+        });
+        return StockItem.from(updatedStockItem);
+    } catch (error) {
+        throw new Error(`Error updating stock item: ${error}`);
+    }
 };

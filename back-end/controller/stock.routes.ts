@@ -71,7 +71,7 @@ export const updateStockItemHandler = (req: Request, res: Response) => {
     const { id } = req.params;
     const { quantity } = req.body;
     try {
-        const updatedItem = stockService.updateStockItem(id, quantity);
+        const updatedItem = stockService.updateStockItem(parseInt(id), quantity);
         res.json(updatedItem);
     } catch (error) {
         if (error instanceof Error) {
