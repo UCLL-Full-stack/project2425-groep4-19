@@ -11,8 +11,8 @@ const admin = new User({
 
 users.push(admin);
 
-const findByEmail = (email: string): User | undefined => {
-    return users.find((user) => user.email === email);
+const findByUsername = (username: string): User | undefined => {
+    return users.find((user) => user.username === username);
 };
 
 const getAllUsers = (): User[] => {
@@ -25,7 +25,7 @@ const createUser = (user: User): User => {
 };
 
 export default {
-    findByEmail,
+    findByUsername,
     getAllUsers,
     createUser,
 };

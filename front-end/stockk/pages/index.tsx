@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { LoginForm } from '../components/LoginForm';
-import Navbar from '../components/navbar'; // Adjust the path as necessary
-
+import { LoginForm } from '../components/account/LoginForm';
+import Navbar from '../components/Header'; // Adjust the path as necessary
+import { useRouter } from 'next/router';
+import NotLoggedIn from '@components/homepage/NotLoggedIn';
+import NotAssignedToOrganisation from '@components/homepage/NotAssignedToOrganisation';
 
 const Home: React.FC = () => {
+    const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+    const router = useRouter();
+
+    useEffect(() => {
+        const username = sessionStorage.getItem('username');
+        const token = sessionStorage.getItem('token');
+
+        if (username && token) {
+            setLoggedInUser(username);
+        } else {
+            setLoggedInUser(null);
+        }
+    }, []);
+
     return (
         <>
             <Head>
@@ -18,15 +34,12 @@ const Home: React.FC = () => {
                 />
             </Head>
 
-            <div className="relative">
-                <div className="bg-custom-image bg-cover bg-center min-h-screen pt-3 flex flex-col items-center">
-                    <div className="flex flex-col items-center justify-center flex-grow">
-                        <h1 className="text-white text-4xl mb-8">Stockk - A stock counting app</h1>
-                        <Navbar />
-                        <div className="flex-grow flex items-center justify-between"></div>
-                        <LoginForm />
-                    </div>
-                </div>
+            <Navbar />
+            <div className="relative bg-background">
+                <>
+                    {!loggedInUser && <NotLoggedIn />}
+                    {loggedInUser && <NotAssignedToOrganisation username={loggedInUser} />}
+                </>
             </div>
         </>
     );
