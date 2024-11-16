@@ -1,9 +1,11 @@
-export class StockItem {
-    readonly id: string;
-    readonly name: string;
-    quantity: number;
+import { StockItem as StockItemPrisma } from '@prisma/client';
 
-    constructor(stockItem: { id: string; name: string; quantity: number }) {
+export class StockItem {
+    readonly id?: number;
+    readonly name: string;
+    readonly quantity: number;
+
+    constructor(stockItem: { id?: number; name: string; quantity: number }) {
         this.validate(stockItem);
         this.id = stockItem.id;
         this.name = stockItem.name;
@@ -11,8 +13,8 @@ export class StockItem {
     }
 
     // Validate stock item input
-    validate(stockItem: { id: string; name: string; quantity: number }) {
-        if (!stockItem.id?.trim()) {
+    validate(stockItem: { id?: number; name: string; quantity: number }) {
+        if (!stockItem.id) {
             throw new Error('ID is required!');
         }
         if (!stockItem.name?.trim()) {
@@ -23,7 +25,7 @@ export class StockItem {
         }
     }
 
-    static from({ id, name, quantity }: StockItem) {
+    static from({ id, name, quantity }: StockItemPrisma): StockItem {
         return new StockItem({
             id,
             name,

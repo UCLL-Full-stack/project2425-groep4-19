@@ -14,3 +14,9 @@ model User {
   password  String
   role      String
 }
+
+model StockItem {
+    id      Int     @id @default(autoincrement())
+    name    String
+    quantity    Int
+}
