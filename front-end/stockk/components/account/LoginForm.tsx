@@ -1,6 +1,7 @@
 import UserService from '@services/UserService';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export const LoginForm = () => {
     const [username, setUsername] = useState('');
@@ -63,6 +64,12 @@ export const LoginForm = () => {
         }
     };
 
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
         <section className=" flex justify-center h-screen mx-3 ">
             <form className="space-y-4 md:space-y-6" onSubmit={handleLogin}>
@@ -82,16 +89,25 @@ export const LoginForm = () => {
                             <p className="text-red-500 text-xl pt-2">{usernameError}</p>
                         )}
                     </div>
-                    <div className="flex flex-col items-center justify-center ">
-                        <input
-                            type="password"
-                            id="password"
-                            placeholder="Password"
-                            style={{ width: '550px' }}
-                            className="px-4 py-5 text-3xl bg-gray-200 rounded-lg text-text placeholder-text"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                    <div className="flex flex-col items-center justify-center">
+                        <div className="relative" style={{ width: '550px' }}>
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                id="password"
+                                placeholder="Password"
+                                className="px-4 py-5 text-3xl bg-gray-200 rounded-lg text-text placeholder-text w-full"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                onClick={togglePasswordVisibility}
+                                className="absolute right-4 top-1/2 transform -translate-y-1/2 pr-1"
+                            >
+                                {showPassword ? <FaEyeSlash size={28} /> : <FaEye size={28} />}
+                            </button>
+                        </div>
+
                         {passwordError && (
                             <p className="text-red-500 text-xl pt-2">{passwordError}</p>
                         )}
