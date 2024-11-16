@@ -2,15 +2,6 @@ import { User } from '../model/user';
 
 const users: User[] = [];
 
-const admin = new User({
-    email: 'admin@admin.com',
-    password: 'admin',
-    role: 'admin',
-    username: 'admin',
-});
-
-users.push(admin);
-
 const findByUsername = (username: string): User | undefined => {
     return users.find((user) => user.username === username);
 };
