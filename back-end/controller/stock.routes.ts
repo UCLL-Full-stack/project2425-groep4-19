@@ -25,8 +25,8 @@ const router = express.Router();
  *                   quantity:
  *                     type: integer
  */
-export const getStockItemsHandler = (req: Request, res: Response) => {
-    const items = stockService.getStockItems();
+export const getStockItemsHandler = async (req: Request, res: Response) => {
+    const items = await stockService.getStockItems();
     res.json(items);
 };
 
