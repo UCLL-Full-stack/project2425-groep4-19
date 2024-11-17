@@ -3,7 +3,7 @@ import Navbar from '../../components/Header'; // Adjust the path as necessary
 import StockChart from '../../components/stock/StockChart'; // Adjust the path as necessary
 
 const Stock: React.FC = () => {
-    const [stockItems, setStockItems] = useState<{ id: string; name: string; quantity: number }[]>(
+    const [stockItems, setStockItems] = useState<{ id: number; name: string; quantity: number }[]>(
         []
     );
     const [searchTerm, setSearchTerm] = useState('');
@@ -29,7 +29,7 @@ const Stock: React.FC = () => {
         setSearchTerm(event.target.value);
     };
 
-    const handleQuantityChange = (id: string, quantity: number) => {
+    const handleQuantityChange = (id: number, quantity: number) => {
         // Update stock quantity in the backend
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/stock/${id}`, {
             method: 'PUT',
@@ -58,9 +58,11 @@ const Stock: React.FC = () => {
             });
     };
 
-    const filteredItems = stockItems.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredItems = stockItems.filter((item) => {
+        item.name.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    console.log('Stock items:', stockItems);
 
     return (
         <>
@@ -87,7 +89,7 @@ const Stock: React.FC = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredItems.map((item) => (
+                                {stockItems.map((item) => (
                                     <tr key={item.id}>
                                         <td className="py-2 px-4 border-b">{item.id}</td>
                                         <td className="py-2 px-4 border-b">{item.name}</td>
@@ -121,7 +123,7 @@ const Stock: React.FC = () => {
                     </div>
                 </div>
                 <div className="w-1/3 ml-4">
-                    <StockChart stockItems={filteredItems} />
+                    <StockChart stockItems={stockItems} />
                 </div>
             </div>
         </>
