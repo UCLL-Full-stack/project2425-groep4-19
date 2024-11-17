@@ -13,6 +13,15 @@ const getAllOrganisations = async (): Promise<Organisation[]> => {
     }
 };
 
+const createOrganisation = async (organisation: OrganisationInput): Promise<Organisation> => {
+    try {
+        return await organisationRepository.createOrganisation(organisation);
+    } catch (error) {
+        throw new Error("Couldn't create organisation");
+    }
+};
+
 export default {
     getAllOrganisations,
+    createOrganisation,
 };
