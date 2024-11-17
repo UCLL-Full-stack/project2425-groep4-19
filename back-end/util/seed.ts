@@ -8,6 +8,8 @@ const prisma = new PrismaClient();
 
 async function clearDatabase() {
     await prisma.user.deleteMany();
+    await prisma.organisation.deleteMany();
+    await prisma.stockItem.deleteMany();
 }
 
 const main = async () => {
