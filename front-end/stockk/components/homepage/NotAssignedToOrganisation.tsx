@@ -14,6 +14,14 @@ export const NotLoggedIn: React.FC<NotLoggedInProps> = ({ username }) => {
             <p className="text-4xl font-light">You have not been added to an organisation yet.</p>
             <p className="text-4xl font-light">Please ask your administrator to add you.</p>
             <p className="text-4xl font-light">Or create your own organisation.</p>
+            <div className="bg-primary px-12 py-5 border rounded-lg">
+                <button
+                    className="text-4xl font-bold"
+                    onClick={async () => await router.push('/create-organisation')}
+                >
+                    Create Organisation
+                </button>
+            </div>
         </div>
     );
 };
