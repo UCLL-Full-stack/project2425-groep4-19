@@ -84,10 +84,11 @@ router.get('/', async (req: Request, res: Response) => {
  */
 
 //* create organisation
-router.post('/', async (req: Request, res: Response) => {
+router.post('/:userId', async (req: Request, res: Response) => {
     try {
         const organisation = req.body;
-        const newOrganisation = await organisationService.createOrganisation(organisation);
+        const userId = parseInt(req.params.userId);
+        const newOrganisation = await organisationService.createOrganisation(organisation, userId);
         res.status(201).json(newOrganisation);
     } catch (error) {
         const err = error as Error;
