@@ -11,4 +11,4 @@ type OrganisationInput = {
     name: string;
 };
 
-export { UserInput };
+export { UserInput, OrganisationInput };

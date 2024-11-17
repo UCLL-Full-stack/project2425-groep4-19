@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-
+import organisationService from '../service/organisation.service';
 const router = express.Router();
 
 /**
@@ -24,7 +24,7 @@ const router = express.Router();
 //* Get all organisations
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const organisations = await organisationService.getAll();
+        const organisations = await organisationService.getAllOrganisations();
         res.status(200).json(organisations);
     } catch (error) {
         const err = error as Error;
