@@ -85,8 +85,13 @@ const getUserRoleByUsername = async (username: string): Promise<string> => {
     return user.role;
 };
 
+const getAllUsers = async (): Promise<User[]> => {
+    return await userRepository.getAllUsers();
+};
+
 export default {
     createUser,
     loginUser,
     getUserRoleByUsername,
+    getAllUsers,
 };

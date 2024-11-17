@@ -130,4 +130,36 @@ userRouter.post('/login', async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+
+//* Get all users
+userRouter.get('/', async (req: Request, res: Response) => {
+    try {
+        const users = await userService.getAllUsers();
+        res.status(200).json(users);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ status: 'error', errorMessage: err.message });
+    }
+});
+
+//Todo error handling
+
 export default userRouter;
