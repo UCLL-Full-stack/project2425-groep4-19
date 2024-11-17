@@ -39,12 +39,14 @@ const hashPassword = async (password: string): Promise<string> => {
 //* Login user
 const loginUser = async ({ username, password }: UserInput): Promise<string> => {
     // get user by username
-    const user = userRepository.findByUsername(username);
+    const user = await userRepository.findByUsername(username);
     console.log('user found by email: ', user);
     if (!user) {
         throw new Error('Email is incorrect.');
     }
-    const isValidPassword = password === user.password;
+    console.log('password: ', password, 'user.password', user.password);
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
         throw new Error('Password is incorrect.');
@@ -76,7 +78,7 @@ const createUser = async ({
 };
 
 const getUserRoleByUsername = async (username: string): Promise<string> => {
-    const user = userRepository.findByUsername(username);
+    const user = await userRepository.findByUsername(username);
     if (!user) {
         throw new Error('Username is incorrect.');
     }

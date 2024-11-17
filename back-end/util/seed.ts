@@ -46,6 +46,38 @@ const main = async () => {
             role: 'user',
         },
     });
+
+    // create stock items
+    await prisma.stockItem.create({
+        data: {
+            name: 'Item 1',
+            quantity: 10,
+        },
+    });
+    await prisma.stockItem.create({
+        data: {
+            name: 'Item 2',
+            quantity: 20,
+        },
+    });
+    await prisma.stockItem.create({
+        data: {
+            name: 'Item 3',
+            quantity: 30,
+        },
+    });
+    await prisma.stockItem.create({
+        data: {
+            name: 'Item 4',
+            quantity: 40,
+        },
+    });
+    await prisma.stockItem.create({
+        data: {
+            name: 'Item 5',
+            quantity: 50,
+        },
+    });
 };
 
 main()
