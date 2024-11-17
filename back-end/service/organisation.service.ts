@@ -16,15 +16,26 @@ const getAllOrganisations = async (): Promise<Organisation[]> => {
 
 const createOrganisation = async (
     organisation: OrganisationInput,
-    userId: number
+    username: string
 ): Promise<Organisation> => {
     try {
+        // Get userId by username
+        const user = await userRepository.findByUsername(username);
+
+        // Check if user exists
+        if (!user || !user.id) {
+            throw new Error("Couldn't find user");
+        }
+        // create organisation
         const newOrganisation = await organisationRepository.createOrganisation(
             organisation,
-            userId
+            user.id
         );
-        // Update the user's role to admin
-        await userRepository.updateUserRole(userId, 'admin');
+
+        // update user role
+        await userRepository.updateUserRole(user.id, 'admin');
+
+        // return new organisation
         return newOrganisation;
     } catch (error) {
         throw new Error("Couldn't create organisation");

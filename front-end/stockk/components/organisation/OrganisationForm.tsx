@@ -1,7 +1,6 @@
-import UserService from '@services/UserService';
+import OrganisationService from '@services/OrganisationService';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export const OrganisationForm = () => {
     const [name, setName] = useState('');
@@ -23,41 +22,34 @@ export const OrganisationForm = () => {
         setCreateError('');
     };
 
-    // const handleCreateOrganisation = async (event: React.FormEvent) => {
-    //     event.preventDefault();
-    //     clearErrors();
-    //     const validateBool = validate();
-    //     if (!validateBool) {
-    //         return;
-    //     }
+    const handleCreateOrganisation = async (event: React.FormEvent) => {
+        event.preventDefault();
+        clearErrors();
+        const validateBool = validate();
+        if (!validateBool) {
+            return;
+        }
 
-    //     try {
-    //         const data = await UserService.userLogin({ name, password });
-    //         console.log('Login response data:', data); // Log the response data
-    //         if (data && data.token) {
-    //             sessionStorage.setItem('username', username);
-    //             sessionStorage.setItem('token', JSON.stringify(data.token));
-    //             console.log('Successful login'); // Log successful login
-    //             router.push('/');
-    //         } else {
-    //             console.error('Login failed: No token received');
-    //             setLoginError('Username or password is wrong'); // Set login error message
-    //         }
-    //     } catch (error: any) {
-    //         console.error('Login error:', error.message); // Log the error message
-    //         if (error.message === 'Email is incorrect.') {
-    //             setUsernameError('Username is incorrect'); // Set username error message
-    //         } else if (error.message === 'Password is incorrect.') {
-    //             setPasswordError('Password is incorrect'); // Set password error message
-    //         } else {
-    //             setLoginError('Username or password is wrong'); // Set generic login error message
-    //         }
-    //     }
-    // };
+        try {
+            const data = await OrganisationService.createOrganisation({ name });
+            console.log('Organisation creation response data:', data); // Log the response data
+            if (data) {
+                sessionStorage.setItem('organisationName', JSON.stringify(data.name));
+                console.log('Successful creation'); // Log successful creation
+                router.push('/');
+            } else {
+                console.error('Creation failed');
+                setCreateError('Organisation could not be created'); // Set create error message
+            }
+        } catch (error: any) {
+            console.error('Creation error:', error.message); // Log the error message
+            setCreateError('Organisation could not be created'); // Set create error message
+        }
+    };
 
     return (
         <section className=" flex justify-center h-screen mx-3 ">
-            <form className="space-y-4 md:space-y-6" onSubmit={() => console.log('go')}>
+            <form className="space-y-4 md:space-y-6" onSubmit={handleCreateOrganisation}>
                 <h1 className="mt-32 text-6xl font-bold mb-24">Create Organisation</h1>
                 <div className="space-y-16 flex flex-col items-center justify-center">
                     <div className="flex flex-col items-center justify-center">
@@ -77,9 +69,11 @@ export const OrganisationForm = () => {
                             Create
                         </button>
                     </div>
-                    {createError && <p className="text-red-500 text-xl mt-2">{createError}</p>}{' '}
+                    {createError && <p className="text-red-500 text-xl mt-2">{createError}</p>}
                 </div>
             </form>
         </section>
     );
 };
+
+export default OrganisationForm;

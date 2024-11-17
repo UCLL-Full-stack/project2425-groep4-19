@@ -62,10 +62,17 @@ router.get('/', async (req: Request, res: Response) => {
  * tags:
  *   name: Organisation
  *   description: Organisation functions
- * /organisations:
+ * /organisations/{username}:
  *   post:
  *     summary: Create a new organisation
  *     tags: [Organisation]
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Username of the user creating the organisation
  *     requestBody:
  *       required: true
  *       content:
@@ -73,7 +80,7 @@ router.get('/', async (req: Request, res: Response) => {
  *           schema:
  *             $ref: '#/components/schemas/OrganisationInput'
  *     responses:
- *       200:
+ *       201:
  *         description: A Organisation object is created
  *         content:
  *           application/json:
@@ -84,11 +91,14 @@ router.get('/', async (req: Request, res: Response) => {
  */
 
 //* create organisation
-router.post('/:userId', async (req: Request, res: Response) => {
+router.post('/:username', async (req: Request, res: Response) => {
     try {
         const organisation = req.body;
-        const userId = parseInt(req.params.userId);
-        const newOrganisation = await organisationService.createOrganisation(organisation, userId);
+        const username = req.params.username;
+        const newOrganisation = await organisationService.createOrganisation(
+            organisation,
+            username
+        );
         res.status(201).json(newOrganisation);
     } catch (error) {
         const err = error as Error;
