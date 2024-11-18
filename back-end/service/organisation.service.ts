@@ -14,6 +14,25 @@ const getAllOrganisations = async (): Promise<Organisation[]> => {
     }
 };
 
+const getOrganisationByName = async (name: string): Promise<Organisation> => {
+    try {
+        return await organisationRepository.getOrganisationByName(name);
+    } catch (error) {
+        throw new Error("Couldn't get organisation");
+    }
+};
+
+const getOrganisationById = async (id: string): Promise<Organisation> => {
+    try {
+        console.log(`Fetching organisation with id: ${id}`);
+        return await organisationRepository.getOrganisationById(id);
+    } catch (error) {
+        const err = error as Error;
+        console.error(`Error in service layer: ${err.message}`);
+        throw new Error("Couldn't get organisation");
+    }
+};
+
 const createOrganisation = async (
     organisation: OrganisationInput,
     username: string
@@ -45,4 +64,6 @@ const createOrganisation = async (
 export default {
     getAllOrganisations,
     createOrganisation,
+    getOrganisationByName,
+    getOrganisationById,
 };

@@ -47,6 +47,7 @@ export const LoginForm = () => {
                 sessionStorage.setItem('username', username);
                 sessionStorage.setItem('token', JSON.stringify(data.token));
                 console.log('Successful login'); // Log successful login
+
                 router.push('/');
             } else {
                 console.error('Login failed: No token received');

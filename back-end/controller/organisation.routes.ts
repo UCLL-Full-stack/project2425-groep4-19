@@ -59,6 +59,82 @@ router.get('/', async (req: Request, res: Response) => {
 
 /**
  * @swagger
+ * /organisations/{name}:
+ *   get:
+ *     summary: Get organisation by name
+ *     tags: [Organisation]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Name of the organisation
+ *     responses:
+ *       200:
+ *         description: An organisation object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Organisation'
+ *       500:
+ *         description: Some server error
+ */
+
+//* Get organisation by name
+router.get('/:name', async (req: Request, res: Response) => {
+    try {
+        console.log('test');
+
+        const name = req.params.name;
+        const organisation = await organisationService.getOrganisationByName(name);
+        res.status(200).json(organisation);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
+    }
+});
+
+/**
+ * @swagger
+ * /organisations/id/{id}:
+ *   get:
+ *     summary: Get organisation by id
+ *     tags: [Organisation]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Id of the organisation
+ *     responses:
+ *       200:
+ *         description: An organisation object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Organisation'
+ *       500:
+ *         description: Some server error
+ */
+
+//* Get organisation by id
+router.get('/id/:id', async (req: Request, res: Response) => {
+    try {
+        console.log('1');
+
+        const id = req.params.id;
+        const organisation = await organisationService.getOrganisationById(id);
+        res.status(200).json(organisation);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
+    }
+});
+
+/**
+ * @swagger
  * tags:
  *   name: Organisation
  *   description: Organisation functions
