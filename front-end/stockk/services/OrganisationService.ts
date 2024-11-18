@@ -47,9 +47,29 @@ const getOrganisationByUser = async (username: string) => {
     return response.json();
 };
 
+const addUserToOrganisation = async (username: string) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const organisationName = sessionStorage.getItem('organisationName');
+    const response = await fetch(
+        apiUrl + '/organisations/adduser/' + username + '/' + organisationName,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'user addition failed');
+    }
+    return response.json();
+};
+
 export default {
     createOrganisation,
     getOrganisationByName,
     getOrganisationById,
     getOrganisationByUser,
+    addUserToOrganisation,
 };

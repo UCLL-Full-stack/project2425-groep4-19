@@ -1,3 +1,4 @@
+import OrganisationService from '@services/OrganisationService';
 import UserService from '@services/UserService';
 import React from 'react';
 
@@ -35,6 +36,15 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel }) => {
         try {
             // get user to check it exists
             const foundUser = await UserService.getUserByUsername(username);
+            console.log('foundUser: ', foundUser);
+            if (!foundUser) {
+                setUserError('User does not exist');
+                return;
+            }
+
+            // add user to organisation
+            await OrganisationService.addUserToOrganisation(username);
+
             onCancel();
         } catch (error) {
             setAddUserError('User could not be added');
@@ -70,6 +80,7 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel }) => {
                         </div>
                     </div>
                 </form>
+                <p className="text-red-600">{userError}</p>
                 <p className="text-red-600">{addUserError}</p>
             </div>
         </>
