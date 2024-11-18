@@ -33,6 +33,18 @@ const getOrganisationById = async (id: string): Promise<Organisation> => {
     }
 };
 
+const getOrganisationByUser = async (username: string): Promise<Organisation | null> => {
+    try {
+        console.log(`Fetching organisation for user: ${username}`);
+        const organisation = await organisationRepository.getOrganisationByUser(username);
+        return organisation;
+    } catch (error) {
+        const err = error as Error;
+        console.error(`Error in service layer: ${err.message}`);
+        throw new Error("Couldn't get organisation for user");
+    }
+};
+
 const createOrganisation = async (
     organisation: OrganisationInput,
     username: string
@@ -66,4 +78,5 @@ export default {
     createOrganisation,
     getOrganisationByName,
     getOrganisationById,
+    getOrganisationByUser,
 };

@@ -122,10 +122,26 @@ router.get('/:name', async (req: Request, res: Response) => {
 //* Get organisation by id
 router.get('/id/:id', async (req: Request, res: Response) => {
     try {
-        console.log('1');
-
         const id = req.params.id;
+        if (id === 'undefined') {
+            return res.status(200).json(undefined);
+        }
         const organisation = await organisationService.getOrganisationById(id);
+        res.status(200).json(organisation);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
+    }
+});
+
+//* Get organisation by user
+router.get('/user/:username', async (req: Request, res: Response) => {
+    try {
+        const username = req.params.username;
+        const organisation = await organisationService.getOrganisationByUser(username);
+        if (organisation === null) {
+            return res.status(200).json(null);
+        }
         res.status(200).json(organisation);
     } catch (error) {
         const err = error as Error;

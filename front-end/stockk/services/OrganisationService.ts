@@ -37,8 +37,19 @@ const getOrganisationById = async (id: string) => {
     return response.json();
 };
 
+const getOrganisationByUser = async (username: string) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(apiUrl + '/organisations/user/' + username);
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'organisation fetch failed');
+    }
+    return response.json();
+};
+
 export default {
     createOrganisation,
     getOrganisationByName,
     getOrganisationById,
+    getOrganisationByUser,
 };

@@ -47,11 +47,16 @@ export const LoginForm = () => {
             if (data && data.token) {
                 sessionStorage.setItem('username', username);
                 sessionStorage.setItem('token', JSON.stringify(data.token));
+
+                // Fetch organisation details
+                const organisationData = await OrganisationService.getOrganisationByUser(username);
+                if (organisationData && organisationData.name) {
+                    sessionStorage.setItem('organisationName', organisationData.name);
+                } else {
+                    sessionStorage.removeItem('organisationName');
+                }
+
                 console.log('Successful login'); // Log successful login
-                console.log('Data: ', data);
-                const org = await OrganisationService.getOrganisationById(data.organisationId);
-                console.log('Organisation data:', org); // Log the organisation data
-                sessionStorage.setItem('organisationName', JSON.stringify(org.name));
                 router.push('/');
             } else {
                 console.error('Login failed: No token received');

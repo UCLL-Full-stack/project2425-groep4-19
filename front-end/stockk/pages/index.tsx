@@ -19,7 +19,7 @@ const Home: React.FC = () => {
         const token = sessionStorage.getItem('token');
         const organisationName = sessionStorage.getItem('organisationName');
 
-        if (username && token && organisationName) {
+        if (username && token) {
             setLoggedInUser(username);
             setOrganisation(organisationName);
         } else {

@@ -48,6 +48,30 @@ const getOrganisationById = async (id: string): Promise<Organisation> => {
     }
 };
 
+const getOrganisationByUser = async (username: string): Promise<Organisation | null> => {
+    try {
+        console.log(`Querying database for organisation with user: ${username}`);
+        const organisation = await database.organisation.findFirst({
+            where: {
+                users: {
+                    some: {
+                        username,
+                    },
+                },
+            },
+        });
+        if (!organisation) {
+            console.log('Organisation not found for user:', username);
+            return null;
+        }
+        return Organisation.from(organisation);
+    } catch (error) {
+        const err = error as Error;
+        console.error(`Error in repository layer: ${err.message}`);
+        throw new Error(`Error getting organisation: ${error})`);
+    }
+};
+
 const createOrganisation = async (
     organisation: OrganisationInput,
     userId: number
@@ -74,4 +98,5 @@ export default {
     createOrganisation,
     getOrganisationByName,
     getOrganisationById,
+    getOrganisationByUser,
 };
