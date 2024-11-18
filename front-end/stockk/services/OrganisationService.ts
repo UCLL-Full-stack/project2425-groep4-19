@@ -50,10 +50,14 @@ const getOrganisationByUser = async (username: string) => {
 const addUserToOrganisation = async (username: string) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const organisationName = sessionStorage.getItem('organisationName');
+    if (!organisationName) {
+        throw new Error('No organisation name found in session storage');
+    }
+    const parsedOrganisationName = JSON.parse(organisationName);
     const response = await fetch(
-        apiUrl + '/organisations/adduser/' + username + '/' + organisationName,
+        apiUrl + '/organisations/adduser/' + username + '/' + parsedOrganisationName,
         {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },

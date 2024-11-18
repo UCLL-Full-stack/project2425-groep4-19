@@ -93,10 +93,32 @@ const createOrganisation = async (
     }
 };
 
+const addUserToOrganisation = async (
+    userId: number,
+    organisationId: number
+): Promise<Organisation> => {
+    try {
+        console.log(`Adding user with id: ${userId} to organisation with id: ${organisationId}`);
+        const organisation = await database.organisation.update({
+            where: { id: organisationId },
+            data: {
+                users: {
+                    connect: { id: userId },
+                },
+            },
+        });
+        return Organisation.from(organisation);
+    } catch (error) {
+        console.error(`Error adding user to organisation: ${error}`);
+        throw new Error(`Error adding user to organisation: ${error}`);
+    }
+};
+
 export default {
     getAllOrganisations,
     createOrganisation,
     getOrganisationByName,
     getOrganisationById,
     getOrganisationByUser,
+    addUserToOrganisation,
 };

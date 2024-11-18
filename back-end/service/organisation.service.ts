@@ -73,10 +73,36 @@ const createOrganisation = async (
     }
 };
 
+const addUserToOrganisation = async (username: string, organisationName: string): Promise<void> => {
+    try {
+        console.log(`Adding user: ${username} to organisation: ${organisationName}`);
+        const user = await userRepository.findByUsername(username);
+
+        if (!user || !user.id) {
+            console.error("Couldn't find user");
+            throw new Error("Couldn't find user");
+        }
+
+        const organisation = await organisationRepository.getOrganisationByName(organisationName);
+
+        if (!organisation || !organisation.id) {
+            console.error("Couldn't find organisation");
+            throw new Error("Couldn't find organisation");
+        }
+
+        await organisationRepository.addUserToOrganisation(user.id, organisation.id);
+        console.log(`User: ${username} added to organisation: ${organisationName}`);
+    } catch (error) {
+        console.error("Couldn't add user to organisation:", error);
+        throw new Error("Couldn't add user to organisation");
+    }
+};
+
 export default {
     getAllOrganisations,
     createOrganisation,
     getOrganisationByName,
     getOrganisationById,
     getOrganisationByUser,
+    addUserToOrganisation,
 };

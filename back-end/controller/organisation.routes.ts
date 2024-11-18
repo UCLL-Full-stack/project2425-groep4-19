@@ -196,6 +196,66 @@ router.post('/:username', async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * @swagger
+ * tags:
+ *   name: Organisation
+ *   description: Organisation functions
+ * /organisations/adduser/{username}/{organisationName}:
+ *   put:
+ *     summary: Add user to organisation
+ *     tags: [Organisation]
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Username of the user being added to the organisation
+ *       - in: path
+ *         name: organisationName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Name of the organisation the user is being added to
+ *     responses:
+ *       200:
+ *         description: A Organisation object is updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Organisation'
+ *       500:
+ *         description: Some server error
+ */
+
+//* add user to organisation
+router.put('/adduser/:username/:organisationName', async (req: Request, res: Response) => {
+    try {
+        const username = req.params.username;
+        const organisationName = req.params.organisationName;
+
+        console.log(`Adding user ${username} to organisation ${organisationName}`);
+
+        const organisation = await organisationService.addUserToOrganisation(
+            username,
+            organisationName
+        );
+
+        console.log(`User ${username} successfully added to organisation ${organisationName}`);
+
+        res.status(200).json(organisation);
+    } catch (error) {
+        const err = error as Error;
+
+        console.error(
+            `Error adding user ${req.params.username} to organisation ${req.params.organisationName}: ${err.message}`
+        );
+
+        res.status(500).json({ message: err.message });
+    }
+});
+
 //Todo error handling
 
 export default router;
