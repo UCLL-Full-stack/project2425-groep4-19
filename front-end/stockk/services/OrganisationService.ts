@@ -29,7 +29,7 @@ const getOrganisationByName = async (name: string) => {
 
 const getOrganisationById = async (id: string) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    const response = await fetch(apiUrl + '/organisations/' + id);
+    const response = await fetch(apiUrl + '/organisations/id/' + id);
     if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'organisation fetch failed');

@@ -89,9 +89,18 @@ const getAllUsers = async (): Promise<User[]> => {
     return await userRepository.getAllUsers();
 };
 
+const getOrganisationIdByUsername = async (username: string): Promise<number | undefined> => {
+    const user = await userRepository.findByUsername(username);
+    if (!user) {
+        throw new Error('Username is incorrect.');
+    }
+    return user.organisationId;
+};
+
 export default {
     createUser,
     loginUser,
     getUserRoleByUsername,
     getAllUsers,
+    getOrganisationIdByUsername,
 };

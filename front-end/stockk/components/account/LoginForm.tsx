@@ -1,3 +1,4 @@
+import OrganisationService from '@services/OrganisationService';
 import UserService from '@services/UserService';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -47,7 +48,10 @@ export const LoginForm = () => {
                 sessionStorage.setItem('username', username);
                 sessionStorage.setItem('token', JSON.stringify(data.token));
                 console.log('Successful login'); // Log successful login
-
+                console.log('Data: ', data);
+                const org = await OrganisationService.getOrganisationById(data.organisationId);
+                console.log('Organisation data:', org); // Log the organisation data
+                sessionStorage.setItem('organisationName', JSON.stringify(org.name));
                 router.push('/');
             } else {
                 console.error('Login failed: No token received');
