@@ -6,25 +6,36 @@ import AddUserForm from './AddUserForm';
 export const OrganisationDetails = () => {
     const [organisation, setOrganisation] = useState<Organisation | null>(null);
     const [name, setName] = useState<string | null>(null);
+    const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
 
     useEffect(() => {
         // get organisation name from session storage
         const orgName = sessionStorage.getItem('organisationName');
+
         if (orgName) {
-            // set and remove quotes from the string
-            setName(JSON.parse(orgName));
+            // set name and remove quotes from the string
+            const parsedName = JSON.parse(orgName);
+            setName(parsedName);
+            console.log('Organisation name:', parsedName);
+
+            // fetch organisation by name
+            const fetchOrganisation = async () => {
+                console.log('Fetching organisation:', parsedName);
+
+                if (!parsedName) {
+                    throw new Error('No organisation name');
+                }
+                const organisation = await OrganisationService.getOrganisationByName(parsedName);
+                setOrganisation(organisation);
+            };
+            // call fetch function
+            fetchOrganisation();
         }
-        // fetch organisation by name
-        const fetchOrganisation = async () => {
-            if (!name) {
-                throw new Error('No organisation name');
-            }
-            const organisation = await OrganisationService.getOrganisationByName(name);
-            setOrganisation(organisation);
-        };
-        // call fetch function
-        fetchOrganisation();
     }, []);
+
+    if (!name) {
+        return <h1 className="text-6xl font-bold mt-20">No organisation name</h1>;
+    }
 
     return (
         <>
@@ -48,17 +59,22 @@ export const OrganisationDetails = () => {
                                 <td className="border px-4 py-2">{user.role}</td>
                             </tr>
                         ))}
-                        <tr>
-                            <td colSpan={4} className="border px-4 py-2 text-center">
-                                <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
-                                    Add User
-                                </button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             )}
-            <AddUserForm />
+            {!showAddUserForm && (
+                <div className="pt-12">
+                    <div className="bg-primary px-7 py-5 border rounded-lg">
+                        <button
+                            className="text-4xl font-bold"
+                            onClick={() => setShowAddUserForm(true)}
+                        >
+                            Add User
+                        </button>
+                    </div>
+                </div>
+            )}
+            {showAddUserForm && <AddUserForm onCancel={() => setShowAddUserForm(false)} />}
         </>
     );
 };
