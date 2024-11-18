@@ -97,10 +97,19 @@ const getOrganisationIdByUsername = async (username: string): Promise<number | u
     return user.organisationId;
 };
 
+const getUserByUsername = async (username: string): Promise<User | null> => {
+    const user = await userRepository.findByUsername(username);
+    if (!user) {
+        throw new Error('Username is incorrect.');
+    }
+    return user;
+};
+
 export default {
     createUser,
     loginUser,
     getUserRoleByUsername,
     getAllUsers,
     getOrganisationIdByUsername,
+    getUserByUsername,
 };

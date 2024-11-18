@@ -161,6 +161,44 @@ userRouter.get('/', async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * @swagger
+ * /users/{username}:
+ *   get:
+ *     summary: Get User by username
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Username of the user
+ *     responses:
+ *       200:
+ *         description: A user object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+
+//* get user by username
+userRouter.get('/:username', async (req: Request, res: Response) => {
+    try {
+        const username = req.params.username;
+        console.log('username: ', username);
+
+        const user = await userService.getUserByUsername(username);
+        res.status(200).json(user);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ status: 'error', errorMessage: err.message });
+    }
+});
+
 //Todo error handling
 
 export default userRouter;

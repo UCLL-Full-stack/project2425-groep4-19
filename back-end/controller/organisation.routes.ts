@@ -84,8 +84,6 @@ router.get('/', async (req: Request, res: Response) => {
 //* Get organisation by name
 router.get('/:name', async (req: Request, res: Response) => {
     try {
-        console.log('test');
-
         const name = req.params.name;
         const organisation = await organisationService.getOrganisationByName(name);
         res.status(200).json(organisation);
