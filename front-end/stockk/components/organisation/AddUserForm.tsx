@@ -1,3 +1,4 @@
+import UserService from '@services/UserService';
 import React from 'react';
 
 interface AddUserFormProps {
@@ -5,13 +6,13 @@ interface AddUserFormProps {
 }
 
 export const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel }) => {
-    const [user, setUser] = React.useState('');
+    const [username, setUsername] = React.useState('');
     const [userError, setUserError] = React.useState('');
     const [addUserError, setAddUserError] = React.useState('');
 
     const validate = () => {
         let result = true;
-        if (user.length === 0) {
+        if (username.length === 0) {
             setUserError('User does not exist');
             result = false;
         }
@@ -32,9 +33,8 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel }) => {
         }
 
         try {
-            // Add user to organisation
-            // Add organisation id to user
-            console.log('User added to organisation');
+            // get user to check it exists
+            const foundUser = await UserService.getUserByUsername(username);
             onCancel();
         } catch (error) {
             setAddUserError('User could not be added');
@@ -53,8 +53,8 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel }) => {
                             placeholder="Username"
                             style={{ width: '300px' }}
                             className="px-4 py-3 text-3xl bg-gray-200 rounded-lg text-text placeholder-text"
-                            value={user}
-                            onChange={(e) => setUser(e.target.value)}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                         ></input>
                         <div className="flex flex-row space-x-4 items-center justify-center">
                             <div className="bg-primary px-7 py-5 border rounded-lg">

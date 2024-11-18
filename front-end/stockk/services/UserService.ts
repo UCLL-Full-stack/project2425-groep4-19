@@ -32,7 +32,17 @@ const userRegister = async (user: User) => {
     return response.json();
 };
 
+const getUserByUsername = async (username: string) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(apiUrl + '/users/' + username);
+    if (!response.ok) {
+        throw new Error('User not found');
+    }
+    return response.json();
+};
+
 export default {
     userLogin,
     userRegister,
+    getUserByUsername,
 };
