@@ -41,8 +41,25 @@ const getUserByUsername = async (username: string) => {
     return response.json();
 };
 
+const updateUserRole = async (userId: number, role: string | undefined) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(apiUrl + '/users/update/' + userId.toString(), {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ role }),
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'update role failed');
+    }
+    return response.json();
+};
+
 export default {
     userLogin,
     userRegister,
     getUserByUsername,
+    updateUserRole,
 };

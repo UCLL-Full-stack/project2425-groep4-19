@@ -3,6 +3,8 @@ import { DeleteButton } from './DeleteButton';
 import EditButton from './EditButton';
 import { Organisation, User } from '@types';
 import { RoleDropdown } from './RoleDropdown';
+import UserService from '@services/UserService';
+import OrganisationService from '@services/OrganisationService';
 
 // Define the props for the UserTable component
 interface UserTableProps {
@@ -24,23 +26,32 @@ export const UserTable: React.FC<UserTableProps> = ({ organisation }) => {
     }
 
     // Function to update the role of a user
-    const updateUserRole = (userId: number, role: string | undefined) => {
+    const updateUserRole = async (userId: number, role: string | undefined) => {
         if (!users) {
             return;
         }
-        // Reset the editing user
-        setEditingUserId(null);
 
         console.log(`Updating role for user ID: ${userId} to ${role}`); // Log the selected role
+        // Update the user's role
+        const result = await UserService.updateUserRole(userId, role);
+
+        // Update the user in the state
+        setUsers(users.map((user) => (user.id === userId ? { ...user, role: role } : user)));
+
+        // Reset the editing user
+        setEditingUserId(null);
     };
 
     // Function to delete a user
-    const deleteUser = (userId: number) => {
+    const deleteUser = async (userId: number) => {
         if (!users) {
             return;
         }
         // Remove the user from the state
         setUsers(users.filter((user) => user.id !== userId));
+
+        // Remove user from organisation in back end
+        const result = await OrganisationService.removeFromOrganisation(userId);
     };
 
     // Get the username of the logged-in user

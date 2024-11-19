@@ -199,6 +199,54 @@ userRouter.get('/:username', async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * @swagger
+ * /users/update/{id}:
+ *   put:
+ *     summary: Update user role by id
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Id of the user as a string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *             required:
+ *               - role
+ *     responses:
+ *       200:
+ *         description: A user object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+
+//* update user role by id
+userRouter.put('/update/:id', async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id);
+        const role = req.body.role;
+        const result = await userService.updateUserRole(id, role);
+        res.status(200).json(result);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ status: 'error', errorMessage: err.message });
+    }
+});
+
 //Todo error handling
 
 export default userRouter;

@@ -67,10 +67,26 @@ const addUserToOrganisation = async (username: string) => {
     return response.json();
 };
 
+const removeFromOrganisation = async (userId: number) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(apiUrl + '/organisations/removeuser/' + userId.toString(), {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'user removal failed');
+    }
+    return response.json();
+};
+
 export default {
     createOrganisation,
     getOrganisationByName,
     getOrganisationById,
     getOrganisationByUser,
     addUserToOrganisation,
+    removeFromOrganisation,
 };

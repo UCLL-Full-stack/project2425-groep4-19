@@ -105,6 +105,13 @@ const getUserByUsername = async (username: string): Promise<User | null> => {
     return user;
 };
 
+const updateUserRole = async (userId: number, role: string | undefined): Promise<User> => {
+    if (!role) {
+        throw new Error('Role is required.');
+    }
+    return await userRepository.updateUserRole(userId, role);
+};
+
 export default {
     createUser,
     loginUser,
@@ -112,4 +119,5 @@ export default {
     getAllUsers,
     getOrganisationIdByUsername,
     getUserByUsername,
+    updateUserRole,
 };
