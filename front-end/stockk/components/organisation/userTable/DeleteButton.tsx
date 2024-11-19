@@ -14,6 +14,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
     deleteUser,
 }) => {
     const handleDeleteClick = () => {
+        console.log(`Delete button clicked for user ID: ${user.id}`);
         if (user.id !== undefined) {
             deleteUser(user.id);
         }

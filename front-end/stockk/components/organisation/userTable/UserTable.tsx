@@ -7,11 +7,10 @@ import { RoleDropdown } from './RoleDropdown';
 // Define the props for the UserTable component
 interface UserTableProps {
     organisation: Organisation; // Organisation object containing users
-    loggedInUsername: string | null; // Username of the logged-in user
 }
 
 // UserTable component definition
-export const UserTable: React.FC<UserTableProps> = ({ organisation, loggedInUsername }) => {
+export const UserTable: React.FC<UserTableProps> = ({ organisation }) => {
     // State to manage the list of users
     const [users, setUsers] = useState<User[] | undefined>(organisation.users);
     // State to manage the ID of the user being edited
@@ -44,6 +43,10 @@ export const UserTable: React.FC<UserTableProps> = ({ organisation, loggedInUser
         // Remove the user from the state
         setUsers(users.filter((user) => user.id !== userId));
     };
+
+    // Get the username of the logged-in user
+    const unParsedName = sessionStorage.getItem('username');
+    const loggedInUsername = unParsedName ? unParsedName.replace(/["]+/g, '') : null;
 
     return (
         <table className="w-3/5 mx-auto bg-background text-text border border-primary rounded-lg shadow-md">
