@@ -47,6 +47,7 @@ export const OrganisationDetails = () => {
                 }
                 const organisation = await OrganisationService.getOrganisationByName(parsedName);
                 setOrganisation(organisation);
+                console.log('Organisation:', organisation);
             };
             fetchOrganisation();
         }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DeleteButton } from './DeleteButton';
 import EditButton from './EditButton';
 import { Organisation, User } from '@types';
@@ -19,6 +19,10 @@ export const UserTable: React.FC<UserTableProps> = ({ organisation }) => {
     const [editingUserId, setEditingUserId] = useState<number | null>(null);
     // State to manage the selected role in the dropdown
     const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
+
+    useEffect(() => {
+        setUsers(organisation.users);
+    }, [organisation]);
 
     // If there are no users in the organisation, display a message
     if (!organisation.users) {
