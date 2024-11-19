@@ -2,15 +2,24 @@ import React, { useState } from 'react';
 import { DeleteButton } from './DeleteButton';
 import EditButton from './EditButton';
 import { Organisation, User } from '@types';
+import { RoleDropdown } from './RoleDropdown';
 
+// Define the props for the UserTable component
 interface UserTableProps {
-    organisation: Organisation;
-    loggedInUsername: string | null;
+    organisation: Organisation; // Organisation object containing users
+    loggedInUsername: string | null; // Username of the logged-in user
 }
 
+// UserTable component definition
 export const UserTable: React.FC<UserTableProps> = ({ organisation, loggedInUsername }) => {
+    // State to manage the list of users
     const [users, setUsers] = useState<User[] | undefined>(organisation.users);
+    // State to manage the ID of the user being edited
+    const [editingUserId, setEditingUserId] = useState<number | null>(null);
+    // State to manage the selected role in the dropdown
+    const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
 
+    // If there are no users in the organisation, display a message
     if (!organisation.users) {
         return <div>No users found</div>;
     }
@@ -22,6 +31,8 @@ export const UserTable: React.FC<UserTableProps> = ({ organisation, loggedInUser
         }
         // Update the user's role in the state
         setUsers(users.map((user) => (user.id === userId ? { ...user, role } : user)));
+        // Reset the editing user
+        setEditingUserId(null);
     };
 
     // Function to delete a user
@@ -48,12 +59,21 @@ export const UserTable: React.FC<UserTableProps> = ({ organisation, loggedInUser
                     users.map((user) => (
                         <tr key={user.id} className="even:bg-gray-50 odd:bg-gray-200">
                             <td className="border px-4 py-2 ">{user.username}</td>
-                            <td className="border px-4 py-2">{user.role}</td>
+                            <td className="border px-4 py-2">
+                                <RoleDropdown
+                                    role={user.role}
+                                    isEditing={editingUserId === user.id}
+                                    selectedOption={selectedRole}
+                                    setSelectedOption={setSelectedRole}
+                                />
+                            </td>
                             <td className="border px-4 py-2">
                                 <EditButton
                                     user={user}
                                     loggedInUsername={loggedInUsername}
                                     updateUserRole={updateUserRole}
+                                    setEditingUserId={setEditingUserId}
+                                    setSelectedRole={setSelectedRole}
                                 />
                             </td>
                             <td className="border px-4 py-2">

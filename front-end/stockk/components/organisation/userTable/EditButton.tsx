@@ -6,26 +6,40 @@ interface EditButtonProps {
     user: User;
     loggedInUsername: string | null;
     updateUserRole: (userId: number, role: string | undefined) => void;
+
+    setSelectedRole: (role: string | undefined) => void;
+    setEditingUserId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const EditButton: React.FC<EditButtonProps> = ({ user, loggedInUsername, updateUserRole }) => {
+const EditButton: React.FC<EditButtonProps> = ({
+    user,
+    loggedInUsername,
+    updateUserRole,
+    setEditingUserId,
+    setSelectedRole,
+}) => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [selectedOption, setSelectedOption] = useState<string | undefined>(user.role);
 
     const handleEditClick = () => {
         setIsEditing(true);
+        if (user.id !== undefined) {
+            setEditingUserId(user.id);
+        }
+        setSelectedRole(user.role);
     };
 
     const handleCheckClick = () => {
         if (user.id !== undefined) {
-            updateUserRole(user.id, selectedOption);
+            updateUserRole(user.id, user.role);
         }
         setIsEditing(false);
+        setEditingUserId(null);
     };
 
     const handleCancelClick = () => {
         setIsEditing(false);
-        setSelectedOption(user.role);
+        setEditingUserId(null);
+        setSelectedRole(user.role);
     };
 
     const isLoggedInUser = loggedInUsername === user.username;
