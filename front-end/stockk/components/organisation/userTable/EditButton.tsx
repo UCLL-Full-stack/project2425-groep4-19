@@ -9,6 +9,7 @@ interface EditButtonProps {
     setEditingUserId: (userId: number | null) => void; // Function to set the ID of the user being edited
     setSelectedRole: (role: string | undefined) => void; // Function to set the selected role in the dropdown
     editingUserId: number | null; // ID of the user currently being edited
+    selectedRole: string | undefined; // Role selected in the dropdown
 }
 
 const EditButton: React.FC<EditButtonProps> = ({
@@ -18,6 +19,7 @@ const EditButton: React.FC<EditButtonProps> = ({
     setEditingUserId,
     setSelectedRole,
     editingUserId,
+    selectedRole,
 }) => {
     // State to manage whether the user is in editing mode
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -39,7 +41,7 @@ const EditButton: React.FC<EditButtonProps> = ({
     const handleCheckClick = () => {
         console.log(`Check button clicked for user ID: ${user.id}`);
         if (user.id !== undefined) {
-            updateUserRole(user.id, user.role); // Update the user's role
+            updateUserRole(user.id, selectedRole); // Use selectedRole here
         }
         setEditingUserId(null); // Reset the editing user ID
     };

@@ -28,11 +28,10 @@ export const UserTable: React.FC<UserTableProps> = ({ organisation }) => {
         if (!users) {
             return;
         }
-        // Update the user's role in the state
-        //TODO not necessary - just update the user in the backend
-        setUsers(users.map((user) => (user.id === userId ? { ...user, role } : user)));
         // Reset the editing user
         setEditingUserId(null);
+
+        console.log(`Updating role for user ID: ${userId} to ${role}`); // Log the selected role
     };
 
     // Function to delete a user
@@ -79,6 +78,7 @@ export const UserTable: React.FC<UserTableProps> = ({ organisation }) => {
                                     setEditingUserId={setEditingUserId}
                                     setSelectedRole={setSelectedRole}
                                     editingUserId={editingUserId}
+                                    selectedRole={selectedRole}
                                 />
                             </td>
                             <td className="border px-4 py-2">

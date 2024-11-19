@@ -1,5 +1,4 @@
-import utils from '@services/utils';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface RoleDropdownProps {
     role: string | undefined;
@@ -15,19 +14,21 @@ export const RoleDropdown: React.FC<RoleDropdownProps> = ({
     setSelectedOption,
 }) => {
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedOption(event.target.value);
+        const newRole = event.target.value;
+        setSelectedOption(newRole);
+        console.log(`Selected role: ${selectedOption}`);
     };
 
     return (
         <>
             {isEditing ? (
                 <select value={selectedOption} onChange={handleChange}>
-                    <option value="User">User</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="manager">Manager</option>
+                    <option value="admin">Admin</option>
                 </select>
             ) : (
-                <span>{utils.capitalizeFirstLetter(role)}</span>
+                <span>{role}</span>
             )}
         </>
     );
