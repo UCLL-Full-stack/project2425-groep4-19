@@ -4,12 +4,14 @@ import React from 'react';
 
 interface AddUserFormProps {
     onCancel: () => void;
+    onSuccessfulAdd: () => void;
 }
 
-export const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel }) => {
+export const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, onSuccessfulAdd }) => {
     const [username, setUsername] = React.useState('');
     const [userError, setUserError] = React.useState('');
     const [addUserError, setAddUserError] = React.useState('');
+    const [message, setMessage] = React.useState('');
 
     const validate = () => {
         let result = true;
@@ -43,10 +45,14 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel }) => {
             }
 
             // add user to organisation
-            await OrganisationService.addUserToOrganisation(username);
+            const data = await OrganisationService.addUserToOrganisation(username);
+            console.log(data);
 
-            onCancel();
+            setMessage(data.message);
+
+            onSuccessfulAdd();
         } catch (error) {
+            console.error('Error in addUserToOrganisation: ', error);
             setAddUserError('User could not be added');
         }
     };

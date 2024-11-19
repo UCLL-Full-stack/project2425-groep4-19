@@ -53,16 +53,13 @@ const addUserToOrganisation = async (username: string) => {
     if (!organisationName) {
         throw new Error('No organisation name found in session storage');
     }
-    const parsedOrganisationName = JSON.parse(organisationName);
-    const response = await fetch(
-        apiUrl + '/organisations/adduser/' + username + '/' + parsedOrganisationName,
-        {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }
-    );
+    const parsedName = organisationName.replace(/["]+/g, '');
+    const response = await fetch(apiUrl + '/organisations/adduser/' + username + '/' + parsedName, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
     if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'user addition failed');

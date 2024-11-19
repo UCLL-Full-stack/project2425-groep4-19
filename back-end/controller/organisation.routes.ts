@@ -237,14 +237,11 @@ router.put('/adduser/:username/:organisationName', async (req: Request, res: Res
 
         console.log(`Adding user ${username} to organisation ${organisationName}`);
 
-        const organisation = await organisationService.addUserToOrganisation(
-            username,
-            organisationName
-        );
+        const result = await organisationService.addUserToOrganisation(username, organisationName);
 
         console.log(`User ${username} successfully added to organisation ${organisationName}`);
 
-        res.status(200).json(organisation);
+        res.status(200).json(result.message);
     } catch (error) {
         const err = error as Error;
 
