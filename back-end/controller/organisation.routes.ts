@@ -253,6 +253,66 @@ router.put('/adduser/:username/:organisationName', async (req: Request, res: Res
     }
 });
 
+/**
+ * @swagger
+ * tags:
+ *   name: Organisation
+ *   description: Organisation functions
+ * /organisations/removeuser/{userId}/{organisationName}:
+ *   put:
+ *     summary: Remove user from organisation
+ *     tags: [Organisation]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: UserId of the user being removed from the organisation
+ *       - in: path
+ *         name: organisationName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Name of the organisation the user is being removed from
+ *     responses:
+ *       200:
+ *         description: A Organisation object is updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Organisation'
+ *       500:
+ *         description: Some server error
+ */
+
+//* remove user from organisation
+router.put('/removeuser/:userId/:organisationName', async (req: Request, res: Response) => {
+    try {
+        const userId = parseInt(req.params.userId);
+        const organisationName = req.params.organisationName;
+
+        console.log(`Removing user with id ${userId} from organisation ${organisationName}`);
+
+        const result = await organisationService.removeUserFromOrganisation(
+            userId,
+            organisationName
+        );
+
+        console.log(`User ${userId} successfully removed from organisation ${organisationName}`);
+
+        res.status(200).json(result.message);
+    } catch (error) {
+        const err = error as Error;
+
+        console.error(
+            `Error removing user ${req.params.username} from organisation ${req.params.organisationName}: ${err.message}`
+        );
+
+        res.status(500).json({ message: err.message });
+    }
+});
+
 //Todo error handling
 
 export default router;

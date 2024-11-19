@@ -114,6 +114,29 @@ const addUserToOrganisation = async (
     }
 };
 
+const removeUserFromOrganisation = async (
+    userId: number,
+    organisationId: number
+): Promise<void> => {
+    try {
+        console.log(
+            `Removing user with id: ${userId} from organisation with id: ${organisationId}`
+        );
+        await database.organisation.update({
+            where: { id: organisationId },
+            data: {
+                users: {
+                    disconnect: { id: userId },
+                },
+            },
+        });
+        return;
+    } catch (error) {
+        console.error(`Error removing user from organisation: ${error}`);
+        throw new Error(`Error removing user from organisation: ${error}`);
+    }
+};
+
 export default {
     getAllOrganisations,
     createOrganisation,
@@ -121,4 +144,5 @@ export default {
     getOrganisationById,
     getOrganisationByUser,
     addUserToOrganisation,
+    removeUserFromOrganisation,
 };

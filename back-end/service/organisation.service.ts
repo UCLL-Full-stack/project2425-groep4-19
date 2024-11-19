@@ -109,6 +109,28 @@ const addUserToOrganisation = async (
     }
 };
 
+const removeUserFromOrganisation = async (
+    userId: number,
+    organisationName: string
+): Promise<{ message: string }> => {
+    try {
+        console.log(`Removing user with id: ${userId} from organisation: ${organisationName}`);
+        const organisation = await organisationRepository.getOrganisationByName(organisationName);
+
+        if (!organisation || !organisation.id) {
+            console.error("Couldn't find organisation");
+            throw new Error("Couldn't find organisation");
+        }
+
+        await organisationRepository.removeUserFromOrganisation(userId, organisation.id);
+        console.log(`User with id: ${userId} removed from organisation: ${organisationName}`);
+        return { message: 'User removed from organisation' };
+    } catch (error) {
+        console.error("Couldn't add user to organisation:", error);
+        throw new Error("Couldn't add user to organisation");
+    }
+};
+
 export default {
     getAllOrganisations,
     createOrganisation,
@@ -116,4 +138,5 @@ export default {
     getOrganisationById,
     getOrganisationByUser,
     addUserToOrganisation,
+    removeUserFromOrganisation,
 };

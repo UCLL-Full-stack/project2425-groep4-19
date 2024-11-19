@@ -69,12 +69,20 @@ const addUserToOrganisation = async (username: string) => {
 
 const removeFromOrganisation = async (userId: number) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    const response = await fetch(apiUrl + '/organisations/removeuser/' + userId.toString(), {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
+    const organisationName = sessionStorage.getItem('organisationName');
+    if (!organisationName) {
+        throw new Error('No organisation name found in session storage');
+    }
+    const parsedName = organisationName.replace(/["]+/g, '');
+    const response = await fetch(
+        apiUrl + '/organisations/removeuser/' + userId.toString() + '/' + parsedName,
+        {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+    );
     if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'user removal failed');
