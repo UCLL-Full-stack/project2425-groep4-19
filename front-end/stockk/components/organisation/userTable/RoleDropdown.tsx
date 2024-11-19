@@ -1,3 +1,4 @@
+import utils from '@services/utils';
 import React from 'react';
 
 interface RoleDropdownProps {
@@ -26,7 +27,7 @@ export const RoleDropdown: React.FC<RoleDropdownProps> = ({
                     <option value="Admin">Admin</option>
                 </select>
             ) : (
-                <span>{role}</span>
+                <span>{utils.capitalizeFirstLetter(role)}</span>
             )}
         </>
     );

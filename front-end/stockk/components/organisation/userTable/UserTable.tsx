@@ -30,6 +30,7 @@ export const UserTable: React.FC<UserTableProps> = ({ organisation, loggedInUser
             return;
         }
         // Update the user's role in the state
+        //TODO not necessary - just update the user in the backend
         setUsers(users.map((user) => (user.id === userId ? { ...user, role } : user)));
         // Reset the editing user
         setEditingUserId(null);
@@ -74,6 +75,7 @@ export const UserTable: React.FC<UserTableProps> = ({ organisation, loggedInUser
                                     updateUserRole={updateUserRole}
                                     setEditingUserId={setEditingUserId}
                                     setSelectedRole={setSelectedRole}
+                                    editingUserId={editingUserId}
                                 />
                             </td>
                             <td className="border px-4 py-2">
