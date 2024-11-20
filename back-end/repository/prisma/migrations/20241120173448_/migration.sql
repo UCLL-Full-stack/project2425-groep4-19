@@ -15,6 +15,7 @@ CREATE TABLE "StockItem" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
+    "organisationId" INTEGER,
 
     CONSTRAINT "StockItem_pkey" PRIMARY KEY ("id")
 );
@@ -32,3 +33,6 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_organisationId_fkey" FOREIGN KEY ("organisationId") REFERENCES "Organisation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StockItem" ADD CONSTRAINT "StockItem_organisationId_fkey" FOREIGN KEY ("organisationId") REFERENCES "Organisation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
