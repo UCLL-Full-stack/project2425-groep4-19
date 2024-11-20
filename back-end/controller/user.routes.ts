@@ -122,12 +122,131 @@ userRouter.post('/login', async (req: Request, res: Response) => {
         const user = <UserInput>req.body;
         const role = await userService.getUserRoleByUsername(user.username);
         const token = await userService.loginUser(user);
-        const response = { token: token, role: role };
+        const organisationid = await userService.getOrganisationIdByUsername(user.username);
+        const response = { token: token, role: role, organisationId: organisationid };
         res.status(200).json(response);
     } catch (error) {
         const err = error as Error;
         res.status(500).json({ status: 'error', errorMessage: err.message });
     }
 });
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+
+//* Get all users
+userRouter.get('/', async (req: Request, res: Response) => {
+    try {
+        const users = await userService.getAllUsers();
+        res.status(200).json(users);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ status: 'error', errorMessage: err.message });
+    }
+});
+
+/**
+ * @swagger
+ * /users/{username}:
+ *   get:
+ *     summary: Get User by username
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Username of the user
+ *     responses:
+ *       200:
+ *         description: A user object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+
+//* get user by username
+userRouter.get('/:username', async (req: Request, res: Response) => {
+    try {
+        const username = req.params.username;
+        console.log('username: ', username);
+
+        const user = await userService.getUserByUsername(username);
+        res.status(200).json(user);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ status: 'error', errorMessage: err.message });
+    }
+});
+
+/**
+ * @swagger
+ * /users/update/{id}:
+ *   put:
+ *     summary: Update user role by id
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Id of the user as a string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *             required:
+ *               - role
+ *     responses:
+ *       200:
+ *         description: A user object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+
+//* update user role by id
+userRouter.put('/update/:id', async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id);
+        const role = req.body.role;
+        const result = await userService.updateUserRole(id, role);
+        res.status(200).json(result);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ status: 'error', errorMessage: err.message });
+    }
+});
+
+//Todo error handling
 
 export default userRouter;

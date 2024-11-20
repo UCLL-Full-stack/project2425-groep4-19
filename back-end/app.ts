@@ -2,9 +2,10 @@ import * as dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
 import * as bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
-import userRouter from './controller/user.routes';
 
+import userRouter from './controller/user.routes';
 import stockController from './controller/stock.routes';
+import organisationController from './controller/organisation.routes';
 import swaggerJsDoc from 'swagger-jsdoc';
 import cors from 'cors';
 
@@ -46,6 +47,7 @@ if (!jwtSecret) {
 //* Routes
 app.use('/users', userRouter);
 app.use('/stock', stockController);
+app.use('/organisations', organisationController);
 
 //* Swagger
 const swaggerOpts = {

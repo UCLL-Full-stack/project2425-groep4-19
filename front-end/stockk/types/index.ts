@@ -5,3 +5,9 @@ export type User = {
     password?: string;
     role?: string;
 };
+
+export type Organisation = {
+    id?: number;
+    name?: string;
+    users?: User[];
+};

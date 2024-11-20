@@ -52,7 +52,7 @@ export const RegisterForm = () => {
             });
             console.log('Login response data:', data); // Log the response data
             if (data && data.token) {
-                sessionStorage.setItem('username', email);
+                sessionStorage.setItem('username', username);
                 sessionStorage.setItem('token', JSON.stringify(data.token));
                 console.log('Successful login'); // Log successful login
                 router.push('/');

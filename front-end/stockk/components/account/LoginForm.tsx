@@ -1,3 +1,4 @@
+import OrganisationService from '@services/OrganisationService';
 import UserService from '@services/UserService';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -46,6 +47,15 @@ export const LoginForm = () => {
             if (data && data.token) {
                 sessionStorage.setItem('username', username);
                 sessionStorage.setItem('token', JSON.stringify(data.token));
+
+                // Fetch organisation details
+                const organisationData = await OrganisationService.getOrganisationByUser(username);
+                if (organisationData && organisationData.name) {
+                    sessionStorage.setItem('organisationName', organisationData.name);
+                } else {
+                    sessionStorage.removeItem('organisationName');
+                }
+
                 console.log('Successful login'); // Log successful login
                 router.push('/');
             } else {

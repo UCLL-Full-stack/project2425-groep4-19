@@ -7,16 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//Todo username unique?
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   username  String
   password  String
   role      String
+  organisationId Int?
+  organisation Organisation? @relation(fields: [organisationId], references: [id])
 }
 
 model StockItem {
     id      Int     @id @default(autoincrement())
     name    String
     quantity    Int
+}
+
+//Todo name unique?
+model Organisation {
+    id      Int     @id @default(autoincrement())
+    name    String
+    users  User[]
 }

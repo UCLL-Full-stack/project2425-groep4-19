@@ -57,8 +57,21 @@ const createUser = async ({
     }
 };
 
+const updateUserRole = async (userId: number, role: string): Promise<User> => {
+    try {
+        const updatedUser = await database.user.update({
+            where: { id: userId },
+            data: { role },
+        });
+        return User.from(updatedUser);
+    } catch (error) {
+        throw new Error(`Error updating user role: ${error}`);
+    }
+};
+
 export default {
     findByUsername,
     getAllUsers,
     createUser,
+    updateUserRole,
 };

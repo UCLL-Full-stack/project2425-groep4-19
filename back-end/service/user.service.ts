@@ -85,8 +85,39 @@ const getUserRoleByUsername = async (username: string): Promise<string> => {
     return user.role;
 };
 
+const getAllUsers = async (): Promise<User[]> => {
+    return await userRepository.getAllUsers();
+};
+
+const getOrganisationIdByUsername = async (username: string): Promise<number | undefined> => {
+    const user = await userRepository.findByUsername(username);
+    if (!user) {
+        throw new Error('Username is incorrect.');
+    }
+    return user.organisationId;
+};
+
+const getUserByUsername = async (username: string): Promise<User | null> => {
+    const user = await userRepository.findByUsername(username);
+    if (!user) {
+        throw new Error('Username is incorrect.');
+    }
+    return user;
+};
+
+const updateUserRole = async (userId: number, role: string | undefined): Promise<User> => {
+    if (!role) {
+        throw new Error('Role is required.');
+    }
+    return await userRepository.updateUserRole(userId, role);
+};
+
 export default {
     createUser,
     loginUser,
     getUserRoleByUsername,
+    getAllUsers,
+    getOrganisationIdByUsername,
+    getUserByUsername,
+    updateUserRole,
 };

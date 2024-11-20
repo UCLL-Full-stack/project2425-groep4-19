@@ -7,4 +7,8 @@ type UserInput = {
     role: string;
 };
 
-export { UserInput };
+type OrganisationInput = {
+    name: string;
+};
+
+export { UserInput, OrganisationInput };

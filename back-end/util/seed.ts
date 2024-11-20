@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import { clear } from 'console';
 
 dotenv.config();
 
@@ -8,6 +9,8 @@ const prisma = new PrismaClient();
 
 async function clearDatabase() {
     await prisma.user.deleteMany();
+    await prisma.organisation.deleteMany();
+    await prisma.stockItem.deleteMany();
 }
 
 const main = async () => {
@@ -28,7 +31,7 @@ const main = async () => {
     const userPassword = await bcrypt.hash(process.env.USER_PASSWORD, 10);
 
     // Create admin user
-    await prisma.user.create({
+    const adminUser = await prisma.user.create({
         data: {
             email: 'admin@admin.com',
             username: 'admin',
@@ -44,6 +47,19 @@ const main = async () => {
             username: 'user',
             password: userPassword,
             role: 'user',
+        },
+    });
+
+    // assign admin to new organization
+
+    await prisma.organisation.create({
+        data: {
+            name: "Admin's Organization",
+            users: {
+                connect: {
+                    id: adminUser.id,
+                },
+            },
         },
     });
 

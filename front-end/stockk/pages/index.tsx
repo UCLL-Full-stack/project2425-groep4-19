@@ -5,19 +5,26 @@ import Navbar from '../components/Header'; // Adjust the path as necessary
 import { useRouter } from 'next/router';
 import NotLoggedIn from '@components/homepage/NotLoggedIn';
 import NotAssignedToOrganisation from '@components/homepage/NotAssignedToOrganisation';
+import OrganisationForm from '@components/organisation/OrganisationForm';
+import HomePage from '@components/homepage/HomePage';
+import OrganisationService from '@services/OrganisationService';
 
 const Home: React.FC = () => {
     const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+    const [organisation, setOrganisation] = useState<string | null>(null);
     const router = useRouter();
 
     useEffect(() => {
         const username = sessionStorage.getItem('username');
         const token = sessionStorage.getItem('token');
+        const organisationName = sessionStorage.getItem('organisationName');
 
         if (username && token) {
             setLoggedInUser(username);
+            setOrganisation(organisationName);
         } else {
             setLoggedInUser(null);
+            setOrganisation(null);
         }
     }, []);
 
@@ -37,8 +44,11 @@ const Home: React.FC = () => {
             <Navbar />
             <div className="relative bg-background">
                 <>
-                    {!loggedInUser && <NotLoggedIn />}
-                    {loggedInUser && <NotAssignedToOrganisation username={loggedInUser} />}
+                    {!loggedInUser && !organisation && <NotLoggedIn />}
+                    {loggedInUser && !organisation && (
+                        <NotAssignedToOrganisation username={loggedInUser} />
+                    )}
+                    {loggedInUser && organisation && <HomePage username={loggedInUser} />}
                 </>
             </div>
         </>
