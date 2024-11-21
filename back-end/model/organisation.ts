@@ -31,13 +31,20 @@ export class Organisation {
         }
     }
 
-    // Convert Prisma organisation to Organisation
+    //TODO - Why is stockItems defined and not using the StockItem class?
     static from({
         id,
         name,
         users,
         stockItems,
-    }: OrganisationPrisma & { users?: UserPrisma[] } & { stockItems?: StockItem[] }): Organisation {
+    }: OrganisationPrisma & { users?: UserPrisma[] } & {
+        stockItems?: {
+            id: number;
+            name: string;
+            organisationId: number | null;
+            quantity: number;
+        }[];
+    }): Organisation {
         return new Organisation({
             id,
             name,

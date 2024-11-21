@@ -10,4 +10,12 @@ export type Organisation = {
     id?: number;
     name?: string;
     users?: User[];
+    stockItems?: StockItem[];
+};
+
+export type StockItem = {
+    id?: number;
+    name?: string;
+    quantity?: number;
+    organisation?: Organisation;
 };

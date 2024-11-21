@@ -9,7 +9,7 @@ export const OrganisationDetails = () => {
     const [name, setName] = useState<string | null>(null);
     const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
-
+    // todo - change call to users endpoint for minimal payload size
     useEffect(() => {
         // get organisation name from session storage
         const orgName = sessionStorage.getItem('organisationName');
