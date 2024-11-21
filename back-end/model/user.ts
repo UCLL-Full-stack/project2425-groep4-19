@@ -36,8 +36,6 @@ export class User {
         username: string;
         password: string;
         role: string;
-        organisationId?: number;
-        organisation?: Organisation;
     }) {
         if (!user.email?.trim()) {
             throw new Error('Email is required!');

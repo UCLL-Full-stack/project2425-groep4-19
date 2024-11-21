@@ -1,19 +1,30 @@
 import { StockItem as StockItemPrisma } from '@prisma/client';
+import { Organisation } from './organisation';
 
 export class StockItem {
-    readonly id?: number;
+    readonly id: number;
     readonly name: string;
     readonly quantity: number;
+    readonly organisationId: number | null;
+    readonly organisation?: Organisation;
 
-    constructor(stockItem: { id?: number; name: string; quantity: number }) {
+    constructor(stockItem: {
+        id: number;
+        name: string;
+        quantity: number;
+        organisationId: number | null;
+        organisation?: Organisation;
+    }) {
         this.validate(stockItem);
         this.id = stockItem.id;
         this.name = stockItem.name;
         this.quantity = stockItem.quantity;
+        this.organisationId = stockItem.organisationId;
+        this.organisation = stockItem.organisation;
     }
 
     // Validate stock item input
-    validate(stockItem: { id?: number; name: string; quantity: number }) {
+    validate(stockItem: { id: number; name: string; quantity: number }) {
         if (!stockItem.id) {
             throw new Error('ID is required!');
         }
@@ -25,11 +36,16 @@ export class StockItem {
         }
     }
 
-    static from({ id, name, quantity }: StockItemPrisma): StockItem {
+    static from(
+        { id, name, quantity, organisationId }: StockItemPrisma,
+        organisation?: Organisation
+    ): StockItem {
         return new StockItem({
             id,
             name,
             quantity,
+            organisationId: organisationId ?? null,
+            organisation: organisation ?? undefined,
         });
     }
 }

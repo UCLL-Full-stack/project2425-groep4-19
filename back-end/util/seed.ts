@@ -50,7 +50,41 @@ const main = async () => {
         },
     });
 
-    // assign admin to new organization
+    // create stock items
+    const item1 = await prisma.stockItem.create({
+        data: {
+            name: 'Item 1',
+            quantity: 10,
+        },
+    });
+    const item2 = await prisma.stockItem.create({
+        data: {
+            name: 'Item 2',
+            quantity: 20,
+        },
+    });
+    const item3 = await prisma.stockItem.create({
+        data: {
+            name: 'Item 3',
+            quantity: 30,
+        },
+    });
+    const item4 = await prisma.stockItem.create({
+        data: {
+            name: 'Item 4',
+            quantity: 40,
+        },
+    });
+    const item5 = await prisma.stockItem.create({
+        data: {
+            name: 'Item 5',
+            quantity: 50,
+        },
+    });
+
+    // create organisation
+    // add admin to organisation
+    // add stock items to organisation
 
     await prisma.organisation.create({
         data: {
@@ -60,38 +94,15 @@ const main = async () => {
                     id: adminUser.id,
                 },
             },
-        },
-    });
-
-    // create stock items
-    await prisma.stockItem.create({
-        data: {
-            name: 'Item 1',
-            quantity: 10,
-        },
-    });
-    await prisma.stockItem.create({
-        data: {
-            name: 'Item 2',
-            quantity: 20,
-        },
-    });
-    await prisma.stockItem.create({
-        data: {
-            name: 'Item 3',
-            quantity: 30,
-        },
-    });
-    await prisma.stockItem.create({
-        data: {
-            name: 'Item 4',
-            quantity: 40,
-        },
-    });
-    await prisma.stockItem.create({
-        data: {
-            name: 'Item 5',
-            quantity: 50,
+            stockItems: {
+                connect: [
+                    { id: item1.id },
+                    { id: item2.id },
+                    { id: item3.id },
+                    { id: item4.id },
+                    { id: item5.id },
+                ],
+            },
         },
     });
 };

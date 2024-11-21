@@ -1,13 +1,39 @@
 import express, { Request, Response } from 'express';
-import * as stockService from '../service/stock.service';
+import stockService from '../service/stock.service';
 
 const router = express.Router();
 
 /**
  * @swagger
- * /stock:
+ * components:
+ *   schemas:
+ *     StockItem:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 1
+ *         name:
+ *           type: string
+ *           example: "Airpods"
+ *         quantity:
+ *           type: integer
+ *           example: 1
+ */
+
+/**
+ * @swagger
+ * /stock/{organisationName}:
  *   get:
- *     summary: Get all stock items
+ *     summary: Get the stock items by organisation name
+ *     tags: [Stock]
+ *     parameters:
+ *       - in: path
+ *         name: organisationName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Name of the organisation
  *     responses:
  *       200:
  *         description: A list of stock items
@@ -16,73 +42,23 @@ const router = express.Router();
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   name:
- *                     type: string
- *                   quantity:
- *                     type: integer
+ *                 $ref: '#/components/schemas/StockItem'
+ *       500:
+ *         description: Some server error
  */
-export const getStockItemsHandler = async (req: Request, res: Response) => {
-    const items = await stockService.getStockItems();
-    res.json(items);
-};
 
-/**
- * @swagger
- * /stock/{id}:
- *   put:
- *     summary: Update stock quantity
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               quantity:
- *                 type: integer
- *     responses:
- *       200:
- *         description: Updated stock item
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 name:
- *                   type: string
- *                 quantity:
- *                   type: integer
- *       404:
- *         description: Item not found
- */
-export const updateStockItemHandler = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { quantity } = req.body;
+//* get all stock items by organisation name
+router.get('/:organisationName', async (req: Request, res: Response) => {
     try {
-        const updatedItem = stockService.updateStockItem(parseInt(id), quantity);
-        res.json(updatedItem);
+        const organisationName = req.params.organisationName;
+        const items = await stockService.getStockItemsByOrganisationName(organisationName);
+        res.status(200).json(items);
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(404).send(error.message);
-        } else {
-            res.status(404).send('Unknown error');
-        }
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
     }
-};
+});
 
-router.get('/', getStockItemsHandler);
-router.put('/:id', updateStockItemHandler);
+//TODO error handling
 
 export default router;

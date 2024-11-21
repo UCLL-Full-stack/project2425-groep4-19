@@ -1,7 +1,7 @@
 import { StockItem } from '../model/stockItem';
 import database from '../util/database';
 
-export const getAllStockItems = async (): Promise<StockItem[]> => {
+const getAllStockItems = async (): Promise<StockItem[]> => {
     try {
         const stockItems = await database.stockItem.findMany();
         return stockItems.map((stockItem) => StockItem.from(stockItem));
@@ -10,7 +10,7 @@ export const getAllStockItems = async (): Promise<StockItem[]> => {
     }
 };
 
-export const getStockItemById = async (id: number): Promise<StockItem | undefined> => {
+const getStockItemById = async (id: number): Promise<StockItem | undefined> => {
     try {
         const stockItem = await database.stockItem.findFirst({
             where: { id: id },
@@ -21,10 +21,7 @@ export const getStockItemById = async (id: number): Promise<StockItem | undefine
     }
 };
 
-export const updateStockItem = async (
-    id: number,
-    quantity: number
-): Promise<StockItem | undefined> => {
+const updateStockItem = async (id: number, quantity: number): Promise<StockItem | undefined> => {
     try {
         const updatedStockItem = await database.stockItem.update({
             where: { id: id },
@@ -34,4 +31,25 @@ export const updateStockItem = async (
     } catch (error) {
         throw new Error(`Error updating stock item: ${error}`);
     }
+};
+function getOrganisationByName(organisationName: string) {
+    throw new Error('Function not implemented.');
+}
+
+const getStockItemsByOrganisationId = async (organisationId: number): Promise<StockItem[]> => {
+    try {
+        const stockItems = await database.stockItem.findMany({
+            where: { organisationId: organisationId },
+        });
+        return stockItems.map((stockItem) => StockItem.from(stockItem));
+    } catch (error) {
+        throw new Error(`Error getting stock items: ${error}`);
+    }
+};
+
+export default {
+    getAllStockItems,
+    getStockItemById,
+    updateStockItem,
+    getStockItemsByOrganisationId,
 };
