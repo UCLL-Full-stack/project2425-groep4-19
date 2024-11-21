@@ -41,12 +41,13 @@ export const LoginForm = () => {
         }
 
         try {
-            console.log('Username: ', username, 'Password: ', password);
+            // Call the userLogin function from the UserService
             const data = await UserService.userLogin({ username, password });
-            console.log('Login response data:', data); // Log the response data
+
+            // check if the data and token is received - this means the login was successful
             if (data && data.token) {
-                sessionStorage.setItem('username', username);
-                sessionStorage.setItem('token', JSON.stringify(data.token));
+                // Store the username and token in the cookies
+                document.cookie = `token=${data.token}; path=/;`;
 
                 // Fetch organisation details
                 const organisationData = await OrganisationService.getOrganisationByUser(username);

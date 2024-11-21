@@ -120,10 +120,8 @@ userRouter.post('/login', async (req: Request, res: Response) => {
     // POST request to login
     try {
         const user = <UserInput>req.body;
-        const role = await userService.getUserRoleByUsername(user.username);
         const token = await userService.loginUser(user);
-        const organisationid = await userService.getOrganisationIdByUsername(user.username);
-        const response = { token: token, role: role, organisationId: organisationid };
+        const response = { token: token };
         res.status(200).json(response);
     } catch (error) {
         const err = error as Error;

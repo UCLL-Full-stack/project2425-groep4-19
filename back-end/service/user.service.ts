@@ -14,8 +14,8 @@ if (!jwtSecret) {
 }
 
 // Generate a JWT token
-const generateJwtToken = (email: string): string => {
-    const payload = { email };
+const generateJwtToken = (username: string, role: string, organisationId?: number): string => {
+    const payload = { username, role, organisationId };
     const expiresIn = `${process.env.JWT_EXPIRES_HOURS}`;
     const options = { expiresIn, issuer: 'libremory' };
     try {
@@ -40,18 +40,16 @@ const hashPassword = async (password: string): Promise<string> => {
 const loginUser = async ({ username, password }: UserInput): Promise<string> => {
     // get user by username
     const user = await userRepository.findByUsername(username);
-    console.log('user found by email: ', user);
     if (!user) {
         throw new Error('Email is incorrect.');
     }
-    console.log('password: ', password, 'user.password', user.password);
 
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
         throw new Error('Password is incorrect.');
     }
-    return generateJwtToken(username);
+    return generateJwtToken(user.username, user.role, user.organisationId);
 };
 
 //* Create new user
@@ -72,7 +70,7 @@ const createUser = async ({
     const newUser = new User({ email, username, password: hashedPassword, role });
 
     await userRepository.createUser(newUser);
-    const token = generateJwtToken(email);
+    const token = generateJwtToken(newUser.username, newUser.role, newUser.organisationId);
 
     return { message: 'User registered successfully', token: token };
 };

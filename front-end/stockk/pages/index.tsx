@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { LoginForm } from '../components/account/LoginForm';
-import Navbar from '../components/Header'; // Adjust the path as necessary
 import { useRouter } from 'next/router';
+
+import Navbar from '@components/Header';
 import NotLoggedIn from '@components/homepage/NotLoggedIn';
 import NotAssignedToOrganisation from '@components/homepage/NotAssignedToOrganisation';
-import OrganisationForm from '@components/organisation/OrganisationForm';
 import HomePage from '@components/homepage/HomePage';
-import OrganisationService from '@services/OrganisationService';
+
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+import utils from '@services/utils';
+
+interface CustomJwtPayload extends JwtPayload {
+    role?: 'user' | 'manager' | 'admin'; // Add the role to the JwtPayload
+    username: string;
+}
 
 const Home: React.FC = () => {
     const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
@@ -15,14 +21,21 @@ const Home: React.FC = () => {
     const router = useRouter();
 
     useEffect(() => {
-        const username = sessionStorage.getItem('username');
-        const token = sessionStorage.getItem('token');
+        const token = utils.getCookie('token');
         const organisationName = sessionStorage.getItem('organisationName');
 
-        if (username && token) {
+        if (token) {
+            const decodedToken = jwtDecode<CustomJwtPayload>(token);
+
+            const username = decodedToken.username;
+            console.log('Decoded token', decodedToken);
+
             setLoggedInUser(username);
             setOrganisation(organisationName);
+            console.log('Token found', username, organisationName);
         } else {
+            console.log('No token found');
+            router.push('/login');
             setLoggedInUser(null);
             setOrganisation(null);
         }

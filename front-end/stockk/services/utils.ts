@@ -5,4 +5,10 @@ const capitalizeFirstLetter = (word: string | undefined) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
 };
 
-export default { capitalizeFirstLetter };
+// Function to read a specific cookie by name
+const getCookie = (name: string) => {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
+};
+
+export default { capitalizeFirstLetter, getCookie };
