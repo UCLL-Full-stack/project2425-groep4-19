@@ -13,7 +13,6 @@ const findByUsername = async (username: string): Promise<User | undefined> => {
 const getAllUsers = async (): Promise<User[]> => {
     try {
         const users = await database.user.findMany({});
-        console.log('Users:', users);
 
         return users.map((user) => User.from(user));
     } catch (error) {

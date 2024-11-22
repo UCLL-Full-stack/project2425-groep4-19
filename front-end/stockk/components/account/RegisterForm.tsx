@@ -33,7 +33,6 @@ export const RegisterForm = () => {
         setregisterError('');
     };
 
-    //TODO - Implement handleRegister function
     const handleRegister = async (event: React.FormEvent) => {
         event.preventDefault();
         clearErrors();
@@ -43,18 +42,19 @@ export const RegisterForm = () => {
         }
 
         try {
-            console.log('Email: ', email, 'Password: ', password, 'Username: ', username);
+            // Call the userRegister function from the UserService
             const data = await UserService.userRegister({
                 email,
                 password,
                 username,
                 role: 'user',
             });
-            console.log('Login response data:', data); // Log the response data
+            // check if the data and token is received - this means the login was successful
             if (data && data.token) {
-                sessionStorage.setItem('username', username);
-                sessionStorage.setItem('token', JSON.stringify(data.token));
-                console.log('Successful login'); // Log successful login
+                // Store the username and token in the cookies
+                document.cookie = `token=${data.token}; path=/;`;
+
+                console.log('Successful register'); // Log successful login
                 router.push('/');
             } else {
                 console.error('Failed to create user!');

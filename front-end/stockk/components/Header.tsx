@@ -8,7 +8,7 @@ const Navbar: React.FC = () => {
 
     const handleLogout = () => {
         setLoggedInUser(null);
-        sessionStorage.clear();
+        document.cookie = 'token=; path=/;';
         router.push('/login');
     };
 

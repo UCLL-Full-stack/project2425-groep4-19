@@ -31,10 +31,10 @@ const generateJwtToken = (username: string, role: string, organisationId?: numbe
     }
 };
 
-const hashPassword = async (password: string): Promise<string> => {
-    const saltRounds = 10;
-    return await bcrypt.hash(password, saltRounds);
-};
+// const hashPassword = async (password: string): Promise<string> => {
+//     const saltRounds = 10;
+//     return await bcrypt.hash(password, saltRounds);
+// };
 
 //* Login user
 const loginUser = async ({ username, password }: UserInput): Promise<string> => {
@@ -45,10 +45,10 @@ const loginUser = async ({ username, password }: UserInput): Promise<string> => 
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
-
     if (!isValidPassword) {
         throw new Error('Password is incorrect.');
     }
+
     return generateJwtToken(user.username, user.role, user.organisationId);
 };
 
@@ -66,11 +66,11 @@ const createUser = async ({
     }
 
     // Hash password and create user
-    const hashedPassword = await hashPassword(password);
-    const newUser = new User({ email, username, password: hashedPassword, role });
+    const newUser = new User({ email, username, password: password, role });
 
     await userRepository.createUser(newUser);
-    const token = generateJwtToken(newUser.username, newUser.role, newUser.organisationId);
+    const token = generateJwtToken(newUser.username, newUser.role);
+    console.log('Token:', token);
 
     return { message: 'User registered successfully', token: token };
 };

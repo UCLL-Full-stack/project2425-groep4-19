@@ -39,7 +39,6 @@ export const LoginForm = () => {
         if (!validateBool) {
             return;
         }
-
         try {
             // Call the userLogin function from the UserService
             const data = await UserService.userLogin({ username, password });
@@ -49,13 +48,7 @@ export const LoginForm = () => {
                 // Store the username and token in the cookies
                 document.cookie = `token=${data.token}; path=/;`;
 
-                // Fetch organisation details
-                const organisationData = await OrganisationService.getOrganisationByUser(username);
-                if (organisationData && organisationData.name) {
-                    sessionStorage.setItem('organisationName', organisationData.name);
-                } else {
-                    sessionStorage.removeItem('organisationName');
-                }
+                // todo Fetch organisation details
 
                 console.log('Successful login'); // Log successful login
                 router.push('/');

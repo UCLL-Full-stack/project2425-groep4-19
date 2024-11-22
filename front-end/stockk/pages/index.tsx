@@ -11,8 +11,9 @@ import { jwtDecode, JwtPayload } from 'jwt-decode';
 import utils from '@services/utils';
 
 interface CustomJwtPayload extends JwtPayload {
-    role?: 'user' | 'manager' | 'admin'; // Add the role to the JwtPayload
+    role?: 'user' | 'manager' | 'admin';
     username: string;
+    organisationId: string;
 }
 
 const Home: React.FC = () => {
@@ -22,17 +23,20 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         const token = utils.getCookie('token');
-        const organisationName = sessionStorage.getItem('organisationName');
+        console.log('Token:', token);
 
         if (token) {
             const decodedToken = jwtDecode<CustomJwtPayload>(token);
 
             const username = decodedToken.username;
-            console.log('Decoded token', decodedToken);
+            const organisationId = decodedToken.organisationId;
+            console.log('Organisation ID:', organisationId);
 
             setLoggedInUser(username);
-            setOrganisation(organisationName);
-            console.log('Token found', username, organisationName);
+            if (organisationId) {
+                console.log('User is logged in and assigned to an organisation');
+                setOrganisation(organisationId);
+            }
         } else {
             console.log('No token found');
             router.push('/login');
