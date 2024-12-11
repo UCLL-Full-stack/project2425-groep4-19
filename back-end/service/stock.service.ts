@@ -22,8 +22,21 @@ const getStockItemsByOrganisationName = async (organisationName: string): Promis
     return await stockRepository.getStockItemsByOrganisationId(organisation.id);
 };
 
+const addStockItemByOrganisationName = async (
+    name: string,
+    quantity: number,
+    organisationName: string
+): Promise<StockItem> => {
+    const organisation = await organisationRepository.getOrganisationByName(organisationName);
+    if (!organisation) {
+        throw new Error('Organisation not found');
+    }
+    return await stockRepository.addStockItemByOrganisationId(name, quantity, organisation.id);
+};
+
 export default {
     getStockItems,
     updateStockItem,
     getStockItemsByOrganisationName,
+    addStockItemByOrganisationName,
 };

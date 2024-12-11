@@ -47,9 +47,29 @@ const getStockItemsByOrganisationId = async (organisationId: number): Promise<St
     }
 };
 
+const addStockItemByOrganisationId = async (
+    name: string,
+    quantity: number,
+    organisationId: number
+): Promise<StockItem> => {
+    try {
+        const newStockItem = await database.stockItem.create({
+            data: {
+                name: name,
+                quantity: quantity,
+                organisationId: organisationId,
+            },
+        });
+        return StockItem.from(newStockItem);
+    } catch (error) {
+        throw new Error(`Error adding stock item: ${error}`);
+    }
+};
+
 export default {
     getAllStockItems,
     getStockItemById,
     updateStockItem,
     getStockItemsByOrganisationId,
+    addStockItemByOrganisationId,
 };

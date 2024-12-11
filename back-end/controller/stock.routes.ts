@@ -59,6 +59,61 @@ router.get('/:organisationName', async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * @swagger
+ * /stock/{organisationName}:
+ *   post:
+ *     summary: Add a new stock item by organisation name
+ *     tags: [Stock]
+ *     parameters:
+ *       - in: path
+ *         name: organisationName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Name of the organisation
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Airpods"
+ *               quantity:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: The newly added stock item
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StockItem'
+ *       500:
+ *         description: Some server error
+ */
+
+// TODO: make stockitems name unique
+//* add a new stock item by organisation name
+router.post('/:organisationName', async (req: Request, res: Response) => {
+    try {
+        const organisationName = req.params.organisationName;
+        const { name, quantity } = req.body;
+        const newItem = await stockService.addStockItemByOrganisationName(
+            name,
+            quantity,
+            organisationName
+        );
+        res.status(201).json(newItem);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500);
+    }
+});
+
 //TODO error handling
 
 export default router;
