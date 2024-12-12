@@ -38,10 +38,19 @@ const updateStockItemQuantityById = async (id: number, quantity: number): Promis
     return await stockRepository.updateStockItemQuantityById(id, quantity);
 };
 
+const updateStockItemById = async (
+    id: number,
+    name: string,
+    quantity: number
+): Promise<StockItem> => {
+    return await stockRepository.updateStockItemById(id, name, quantity);
+};
+
 export default {
     getStockItems,
     updateStockItem,
     getStockItemsByOrganisationName,
     addStockItemByOrganisationName,
     updateStockItemQuantityById,
+    updateStockItemById,
 };

@@ -78,6 +78,22 @@ const updateStockItemQuantityById = async (id: number, quantity: number): Promis
     }
 };
 
+const updateStockItemById = async (
+    id: number,
+    name: string,
+    quantity: number
+): Promise<StockItem> => {
+    try {
+        const updatedStockItem = await database.stockItem.update({
+            where: { id: id },
+            data: { name: name, quantity: quantity },
+        });
+        return StockItem.from(updatedStockItem);
+    } catch (error) {
+        throw new Error(`Error updating stock item: ${error}`);
+    }
+};
+
 export default {
     getAllStockItems,
     getStockItemById,
@@ -85,4 +101,5 @@ export default {
     getStockItemsByOrganisationId,
     addStockItemByOrganisationId,
     updateStockItemQuantityById,
+    updateStockItemById,
 };

@@ -116,7 +116,7 @@ router.post('/:organisationName', async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /stock/{id}:
+ * /stock/updateQuantity/{id}:
  *   put:
  *     summary: Update quantity of a stock item by id
  *     tags: [Stock]
@@ -149,11 +149,61 @@ router.post('/:organisationName', async (req: Request, res: Response) => {
  */
 
 //* update stock item quantity by id
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/updateQuantity/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
         const { quantity } = req.body;
         const updatedItem = await stockService.updateStockItemQuantityById(id, quantity);
+        res.status(200).json(updatedItem);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
+    }
+});
+
+/**
+ * @swagger
+ * /stock/{id}:
+ *   put:
+ *     summary: Update a stock item by id
+ *     tags: [Stock]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Id of the stockitem
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Airpods"
+ *               quantity:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: The updated stock item
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StockItem'
+ *       500:
+ *         description: Some server error
+ */
+
+//* update stock item by id
+router.put('/:id', async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { name, quantity } = req.body;
+        const updatedItem = await stockService.updateStockItemById(id, name, quantity);
         res.status(200).json(updatedItem);
     } catch (error) {
         const err = error as Error;

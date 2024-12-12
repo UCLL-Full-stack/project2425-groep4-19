@@ -5,9 +5,15 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 interface StockTableProps {
     stock: StockItem[];
     handleChangeQuantity: (id: number | undefined, quantity: number) => void;
+
+    handleOpenPopup: (stockItem: StockItem) => void;
 }
 
-const StockTable: React.FC<StockTableProps> = ({ stock, handleChangeQuantity }) => {
+const StockTable: React.FC<StockTableProps> = ({
+    stock,
+    handleChangeQuantity,
+    handleOpenPopup,
+}) => {
     const [organisationStock, setOrganisationStock] = useState<StockItem[]>([]);
 
     useEffect(() => {
@@ -47,7 +53,7 @@ const StockTable: React.FC<StockTableProps> = ({ stock, handleChangeQuantity }) 
                                     <form>
                                         <input
                                             type="number"
-                                            className="w-20 text-2xl text-center border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                            className="w-1/3 text-2xl text-center border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
                                             defaultValue={stockItem.quantity}
                                             onChange={(e) =>
                                                 handleChangeQuantity(
@@ -63,9 +69,7 @@ const StockTable: React.FC<StockTableProps> = ({ stock, handleChangeQuantity }) 
                                         <div className="bg-primary flex items-center justify-center p-2 rounded-lg">
                                             <button
                                                 className="text-text"
-                                                onClick={() => {
-                                                    console.log('Edit stock item: ', stockItem);
-                                                }}
+                                                onClick={() => handleOpenPopup(stockItem)}
                                             >
                                                 <FaEdit size={40} />
                                             </button>

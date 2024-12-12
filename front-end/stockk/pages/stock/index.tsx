@@ -1,6 +1,7 @@
 import Navbar from '@components/Header';
 import { AddStockItemButton } from '@components/stock/AddStockItemButton';
 import { AddStockItemPopup } from '@components/stock/AddStockItemPopup';
+import { EditStockItemPopup } from '@components/stock/EditStockItemPopup';
 import StockTable from '@components/stock/StockTable';
 import StockItemService from '@services/StockItemService';
 import { StockItem } from '@types';
@@ -9,7 +10,9 @@ import React, { useEffect, useState } from 'react';
 export const StockPage = () => {
     const [organisationName, setOrganisationName] = React.useState<string>('');
     const [stock, setStock] = React.useState<StockItem[]>([]);
-    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const [isNewItemPopupVisible, setIsNewItemPopupVisible] = useState(false);
+    const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
+    const [editingStockItem, setEditingStockItem] = useState<StockItem | null>(null);
 
     useEffect(() => {
         const orgName = sessionStorage.getItem('organisationName');
@@ -42,11 +45,22 @@ export const StockPage = () => {
 
     // New item popup
     const handleOpenNewItemPopup = () => {
-        setIsPopupVisible(true);
+        setIsNewItemPopupVisible(true);
     };
 
     const handleCloseNewItemPopup = () => {
-        setIsPopupVisible(false);
+        setIsNewItemPopupVisible(false);
+    };
+
+    // Edit item popup
+    const handleOpenEditPopup = (stockItem: StockItem) => {
+        setIsEditPopupVisible(true);
+        setEditingStockItem(stockItem);
+    };
+
+    const handleCloseEditPopup = () => {
+        setIsEditPopupVisible(false);
+        setEditingStockItem(null);
     };
 
     // Add new item
@@ -64,7 +78,20 @@ export const StockPage = () => {
 
     // Update item quantity
     const handleChangeQuantity = async (id: number | undefined, quantity: number) => {
+        if (quantity === undefined || Number.isNaN(quantity)) {
+            quantity = 0;
+        }
         const updatedStockItem = await StockItemService.updateStockItemQuantityById(id, quantity);
+        const updatedStock = stock.map((item) =>
+            item.id === updatedStockItem.id ? updatedStockItem : item
+        );
+        setStock(updatedStock);
+    };
+
+    // Update item
+    const handleEditItem = async (id: number | undefined, name: string, quantity: number) => {
+        // update item
+        const updatedStockItem = await StockItemService.updateStockItemById(id, name, quantity);
         const updatedStock = stock.map((item) =>
             item.id === updatedStockItem.id ? updatedStockItem : item
         );
@@ -81,12 +108,23 @@ export const StockPage = () => {
                         <AddStockItemButton onOpenPopup={handleOpenNewItemPopup} />
                     </div>
                     {stock && (
-                        <StockTable stock={stock} handleChangeQuantity={handleChangeQuantity} />
+                        <StockTable
+                            stock={stock}
+                            handleChangeQuantity={handleChangeQuantity}
+                            handleOpenPopup={handleOpenEditPopup}
+                        />
                     )}
-                    {isPopupVisible && (
+                    {isNewItemPopupVisible && (
                         <AddStockItemPopup
                             handleClosePopup={handleCloseNewItemPopup}
                             handleAddNewItem={handleAddNewItem}
+                        />
+                    )}
+                    {isEditPopupVisible && (
+                        <EditStockItemPopup
+                            handleClosePopup={handleCloseEditPopup}
+                            stockItem={editingStockItem}
+                            handleEditItem={handleEditItem}
                         />
                     )}
                 </div>
