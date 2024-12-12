@@ -33,7 +33,27 @@ const addStockItemByOrganisationName = async (
     return response.json();
 };
 
+const updateStockItemQuantityById = async (id: number | undefined, quantity: number) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (!id) {
+        throw new Error('No stock item id');
+    }
+    const response = await fetch(apiUrl + '/stock/' + id, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ quantity }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to update stock item quantity');
+    }
+    return response.json();
+};
+
 export default {
     getAllStockItemsOfOrganisationByOrganisationName,
     addStockItemByOrganisationName,
+    updateStockItemQuantityById,
 };

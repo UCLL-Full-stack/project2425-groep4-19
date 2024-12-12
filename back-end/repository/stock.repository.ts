@@ -66,10 +66,23 @@ const addStockItemByOrganisationId = async (
     }
 };
 
+const updateStockItemQuantityById = async (id: number, quantity: number): Promise<StockItem> => {
+    try {
+        const updatedStockItem = await database.stockItem.update({
+            where: { id: id },
+            data: { quantity: quantity },
+        });
+        return StockItem.from(updatedStockItem);
+    } catch (error) {
+        throw new Error(`Error updating stock item: ${error}`);
+    }
+};
+
 export default {
     getAllStockItems,
     getStockItemById,
     updateStockItem,
     getStockItemsByOrganisationId,
     addStockItemByOrganisationId,
+    updateStockItemQuantityById,
 };

@@ -41,11 +41,11 @@ export const StockPage = () => {
     }, []);
 
     // New item popup
-    const handleOpenPopup = () => {
+    const handleOpenNewItemPopup = () => {
         setIsPopupVisible(true);
     };
 
-    const handleClosePopup = () => {
+    const handleCloseNewItemPopup = () => {
         setIsPopupVisible(false);
     };
 
@@ -62,6 +62,15 @@ export const StockPage = () => {
         setStock([...stock, newItem]);
     };
 
+    // Update item quantity
+    const handleChangeQuantity = async (id: number | undefined, quantity: number) => {
+        const updatedStockItem = await StockItemService.updateStockItemQuantityById(id, quantity);
+        const updatedStock = stock.map((item) =>
+            item.id === updatedStockItem.id ? updatedStockItem : item
+        );
+        setStock(updatedStock);
+    };
+
     return (
         <>
             <Navbar />
@@ -69,12 +78,14 @@ export const StockPage = () => {
                 <div className=" min-h-screen pt-3 flex flex-col items-center flex-grow ">
                     <h1 className="mt-2 text-6xl font-bold mb-12">{organisationName} - Stock</h1>
                     <div className="mb-14">
-                        <AddStockItemButton onOpenPopup={handleOpenPopup} />
+                        <AddStockItemButton onOpenPopup={handleOpenNewItemPopup} />
                     </div>
-                    {stock && <StockTable stock={stock} />}
+                    {stock && (
+                        <StockTable stock={stock} handleChangeQuantity={handleChangeQuantity} />
+                    )}
                     {isPopupVisible && (
                         <AddStockItemPopup
-                            handleClosePopup={handleClosePopup}
+                            handleClosePopup={handleCloseNewItemPopup}
                             handleAddNewItem={handleAddNewItem}
                         />
                     )}

@@ -34,9 +34,14 @@ const addStockItemByOrganisationName = async (
     return await stockRepository.addStockItemByOrganisationId(name, quantity, organisation.id);
 };
 
+const updateStockItemQuantityById = async (id: number, quantity: number): Promise<StockItem> => {
+    return await stockRepository.updateStockItemQuantityById(id, quantity);
+};
+
 export default {
     getStockItems,
     updateStockItem,
     getStockItemsByOrganisationName,
     addStockItemByOrganisationName,
+    updateStockItemQuantityById,
 };
