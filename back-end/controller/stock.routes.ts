@@ -211,6 +211,42 @@ router.put('/:id', async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * @swagger
+ * /stock/{id}:
+ *   delete:
+ *     summary: delete a stock item by id
+ *     tags: [Stock]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Id of the stockitem
+ *     responses:
+ *       201:
+ *         description: The deleted stock item
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StockItem'
+ *       500:
+ *         description: Some server error
+ */
+
+//* delete stock item by id
+router.delete('/:id', async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id);
+        const deletedItem = await stockService.deleteStockItemById(id);
+        res.status(200).json(deletedItem);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
+    }
+});
+
 //TODO error handling
 
 export default router;

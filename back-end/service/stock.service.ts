@@ -46,6 +46,10 @@ const updateStockItemById = async (
     return await stockRepository.updateStockItemById(id, name, quantity);
 };
 
+const deleteStockItemById = async (id: number): Promise<StockItem> => {
+    return await stockRepository.deleteStockItemById(id);
+};
+
 export default {
     getStockItems,
     updateStockItem,
@@ -53,4 +57,5 @@ export default {
     addStockItemByOrganisationName,
     updateStockItemQuantityById,
     updateStockItemById,
+    deleteStockItemById,
 };

@@ -94,6 +94,19 @@ const updateStockItemById = async (
     }
 };
 
+const deleteStockItemById = async (id: number): Promise<StockItem> => {
+    try {
+        const deletedStockItem = await getStockItemById(id);
+        if (!deletedStockItem) {
+            throw new Error('Stock item not found');
+        }
+        await database.stockItem.delete({ where: { id: id } });
+        return StockItem.from(deletedStockItem);
+    } catch (error) {
+        throw new Error(`Error deleting stock item: ${error}`);
+    }
+};
+
 export default {
     getAllStockItems,
     getStockItemById,
@@ -102,4 +115,5 @@ export default {
     addStockItemByOrganisationId,
     updateStockItemQuantityById,
     updateStockItemById,
+    deleteStockItemById,
 };

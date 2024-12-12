@@ -5,14 +5,15 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 interface StockTableProps {
     stock: StockItem[];
     handleChangeQuantity: (id: number | undefined, quantity: number) => void;
-
-    handleOpenPopup: (stockItem: StockItem) => void;
+    handleOpenEditPopup: (stockItem: StockItem) => void;
+    handleOpenDeletePopup: (stockItem: StockItem) => void;
 }
 
 const StockTable: React.FC<StockTableProps> = ({
     stock,
     handleChangeQuantity,
-    handleOpenPopup,
+    handleOpenEditPopup,
+    handleOpenDeletePopup,
 }) => {
     const [organisationStock, setOrganisationStock] = useState<StockItem[]>([]);
 
@@ -69,7 +70,7 @@ const StockTable: React.FC<StockTableProps> = ({
                                         <div className="bg-primary flex items-center justify-center p-2 rounded-lg">
                                             <button
                                                 className="text-text"
-                                                onClick={() => handleOpenPopup(stockItem)}
+                                                onClick={() => handleOpenEditPopup(stockItem)}
                                             >
                                                 <FaEdit size={40} />
                                             </button>
@@ -81,9 +82,7 @@ const StockTable: React.FC<StockTableProps> = ({
                                         <div className="bg-secondary flex items-center justify-center p-2 rounded-lg">
                                             <button
                                                 className="text-text"
-                                                onClick={() => {
-                                                    console.log('Delete stock item: ', stockItem);
-                                                }}
+                                                onClick={() => handleOpenDeletePopup(stockItem)}
                                             >
                                                 <FaTrash size={40} />
                                             </button>

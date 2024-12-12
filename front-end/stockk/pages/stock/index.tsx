@@ -1,6 +1,7 @@
 import Navbar from '@components/Header';
 import { AddStockItemButton } from '@components/stock/AddStockItemButton';
 import { AddStockItemPopup } from '@components/stock/AddStockItemPopup';
+import { DeleteStockItemPopup } from '@components/stock/DeleteStockItemPopup';
 import { EditStockItemPopup } from '@components/stock/EditStockItemPopup';
 import StockTable from '@components/stock/StockTable';
 import StockItemService from '@services/StockItemService';
@@ -13,6 +14,8 @@ export const StockPage = () => {
     const [isNewItemPopupVisible, setIsNewItemPopupVisible] = useState(false);
     const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
     const [editingStockItem, setEditingStockItem] = useState<StockItem | null>(null);
+    const [IsDeletePopUpVisible, setIsDeletePopUpVisible] = useState(false);
+    const [deletingStockItem, setDeletingStockItem] = useState<StockItem | null>(null);
 
     useEffect(() => {
         const orgName = sessionStorage.getItem('organisationName');
@@ -63,6 +66,17 @@ export const StockPage = () => {
         setEditingStockItem(null);
     };
 
+    // Delete item popup
+    const handleOpenDeletePopup = (stockItem: StockItem) => {
+        setIsDeletePopUpVisible(true);
+        setDeletingStockItem(stockItem);
+    };
+
+    const handleCloseDeletePopup = () => {
+        setIsDeletePopUpVisible(false);
+        setDeletingStockItem(null);
+    };
+
     // Add new item
     const handleAddNewItem = async (name: string, quantity: number) => {
         console.log('Adding new item:', name, quantity);
@@ -98,6 +112,15 @@ export const StockPage = () => {
         setStock(updatedStock);
     };
 
+    // Delete item
+    const handleDeleteItem = async (id: number | undefined) => {
+        console.log('Deleting item: ', id);
+        const deletedStockItem = await StockItemService.deleteStockItemById(id);
+        const updatedStock = stock.filter((item) => item.id !== deletedStockItem.id);
+        setStock(updatedStock);
+        setIsDeletePopUpVisible(false);
+    };
+
     return (
         <>
             <Navbar />
@@ -111,7 +134,8 @@ export const StockPage = () => {
                         <StockTable
                             stock={stock}
                             handleChangeQuantity={handleChangeQuantity}
-                            handleOpenPopup={handleOpenEditPopup}
+                            handleOpenEditPopup={handleOpenEditPopup}
+                            handleOpenDeletePopup={handleOpenDeletePopup}
                         />
                     )}
                     {isNewItemPopupVisible && (
@@ -125,6 +149,13 @@ export const StockPage = () => {
                             handleClosePopup={handleCloseEditPopup}
                             stockItem={editingStockItem}
                             handleEditItem={handleEditItem}
+                        />
+                    )}
+                    {IsDeletePopUpVisible && (
+                        <DeleteStockItemPopup
+                            handleClosePopup={handleCloseDeletePopup}
+                            stockItem={deletingStockItem}
+                            handleDeleteItem={handleDeleteItem}
                         />
                     )}
                 </div>
