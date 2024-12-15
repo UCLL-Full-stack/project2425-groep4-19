@@ -66,10 +66,54 @@ const addStockItemByOrganisationId = async (
     }
 };
 
+const updateStockItemQuantityById = async (id: number, quantity: number): Promise<StockItem> => {
+    try {
+        const updatedStockItem = await database.stockItem.update({
+            where: { id: id },
+            data: { quantity: quantity },
+        });
+        return StockItem.from(updatedStockItem);
+    } catch (error) {
+        throw new Error(`Error updating stock item: ${error}`);
+    }
+};
+
+const updateStockItemById = async (
+    id: number,
+    name: string,
+    quantity: number
+): Promise<StockItem> => {
+    try {
+        const updatedStockItem = await database.stockItem.update({
+            where: { id: id },
+            data: { name: name, quantity: quantity },
+        });
+        return StockItem.from(updatedStockItem);
+    } catch (error) {
+        throw new Error(`Error updating stock item: ${error}`);
+    }
+};
+
+const deleteStockItemById = async (id: number): Promise<StockItem> => {
+    try {
+        const deletedStockItem = await getStockItemById(id);
+        if (!deletedStockItem) {
+            throw new Error('Stock item not found');
+        }
+        await database.stockItem.delete({ where: { id: id } });
+        return StockItem.from(deletedStockItem);
+    } catch (error) {
+        throw new Error(`Error deleting stock item: ${error}`);
+    }
+};
+
 export default {
     getAllStockItems,
     getStockItemById,
     updateStockItem,
     getStockItemsByOrganisationId,
     addStockItemByOrganisationId,
+    updateStockItemQuantityById,
+    updateStockItemById,
+    deleteStockItemById,
 };
