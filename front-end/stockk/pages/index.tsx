@@ -8,8 +8,11 @@ import NotAssignedToOrganisation from '@components/homepage/NotAssignedToOrganis
 import OrganisationForm from '@components/organisation/OrganisationForm';
 import HomePage from '@components/homepage/HomePage';
 import OrganisationService from '@services/OrganisationService';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Home: React.FC = () => {
+    const { t } = useTranslation('common');
     const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
     const [organisation, setOrganisation] = useState<string | null>(null);
     const router = useRouter();
@@ -31,8 +34,8 @@ const Home: React.FC = () => {
     return (
         <>
             <Head>
-                <title>Demo Project</title>
-                <meta name="description" content="Exam app" />
+                <title>{t('title')}</title>
+                <meta name="description" content={t('description')} />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.webp" />
                 <link
@@ -54,5 +57,11 @@ const Home: React.FC = () => {
         </>
     );
 };
+
+export const getStaticProps = async ({ locale }) => ({
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+});
 
 export default Home;
