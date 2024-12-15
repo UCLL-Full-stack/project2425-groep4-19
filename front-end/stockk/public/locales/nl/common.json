@@ -1,0 +1,12 @@
+{
+  "welcome": "Welkom",
+  "change_language": "Taal wijzigen",
+  "login": "Inloggen",
+  "register": "Registreren",
+  "stock": "Voorraad",
+  "logout": "Uitloggen",
+  "title": "Demo Project",
+  "description": "Examen app",
+  "welcome_message": "Welkom bij Stockk",
+  "login_message": "Gelieve in te loggen of te registreren"
+}

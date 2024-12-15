@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import LanguageSwitcher from '@components/LanguageSwitcher';
+import { useTranslation } from 'next-i18next';
 
 const Navbar: React.FC = () => {
+    const { t } = useTranslation('common');
     const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
     const router = useRouter();
 
@@ -32,20 +35,21 @@ const Navbar: React.FC = () => {
                 <div className="flex space-x-16 text-text font-medium text-5xl px-8">
                     {!loggedInUser && (
                         <Link href="/login" legacyBehavior>
-                            <a>Login</a>
+                            <a>{t('login')}</a>
                         </Link>
                     )}
                     {!loggedInUser && (
                         <Link href="/register" legacyBehavior>
-                            <a>Register</a>
+                            <a>{t('register')}</a>
                         </Link>
                     )}
                     {loggedInUser && (
                         <Link href="/stock" legacyBehavior>
-                            <a>Stock</a>
+                            <a>{t('stock')}</a>
                         </Link>
                     )}
-                    {loggedInUser && <button onClick={handleLogout}>Logout</button>}
+                    {loggedInUser && <button onClick={handleLogout}>{t('logout')}</button>}
+                    <LanguageSwitcher />
                 </div>
             </div>
         </nav>
