@@ -1,4 +1,5 @@
 import { StockItem } from '../model/stockItem';
+import { StockItemTag } from '../model/stockItemTag';
 import database from '../util/database';
 
 const getAllStockItems = async (): Promise<StockItem[]> => {
@@ -40,8 +41,15 @@ const getStockItemsByOrganisationId = async (organisationId: number): Promise<St
     try {
         const stockItems = await database.stockItem.findMany({
             where: { organisationId: organisationId },
+            include: { tagRelations: { include: { stockItemTag: true } } }, // Include the tags in the query
         });
-        return stockItems.map((stockItem) => StockItem.from(stockItem));
+        return stockItems.map((stockItem) =>
+            StockItem.from(
+                stockItem,
+                undefined,
+                stockItem.tagRelations.map((relation) => StockItemTag.from(relation.stockItemTag))
+            )
+        );
     } catch (error) {
         throw new Error(`Error getting stock items: ${error}`);
     }

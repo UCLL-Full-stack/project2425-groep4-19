@@ -11,6 +11,8 @@ async function clearDatabase() {
     await prisma.user.deleteMany();
     await prisma.organisation.deleteMany();
     await prisma.stockItem.deleteMany();
+    await prisma.stockItemTag.deleteMany();
+    await prisma.stockItemTagRelation.deleteMany();
 }
 
 const main = async () => {
@@ -50,6 +52,20 @@ const main = async () => {
         },
     });
 
+    const tag1 = await prisma.stockItemTag.create({
+        data: {
+            name: 'Tag 1',
+            color: '#EE4B2B',
+        },
+    });
+
+    const tag2 = await prisma.stockItemTag.create({
+        data: {
+            name: 'Tag 2',
+            color: '#33ddff',
+        },
+    });
+
     // create stock items
     const item1 = await prisma.stockItem.create({
         data: {
@@ -80,6 +96,20 @@ const main = async () => {
             name: 'Item 5',
             quantity: 50,
         },
+    });
+
+    await prisma.stockItemTagRelation.createMany({
+        data: [
+            { stockItemId: item1.id, stockItemTagId: tag1.id },
+            { stockItemId: item2.id, stockItemTagId: tag2.id },
+            { stockItemId: item3.id, stockItemTagId: tag1.id },
+
+            { stockItemId: item4.id, stockItemTagId: tag1.id },
+            { stockItemId: item4.id, stockItemTagId: tag2.id },
+
+            { stockItemId: item5.id, stockItemTagId: tag1.id },
+            { stockItemId: item5.id, stockItemTagId: tag2.id },
+        ],
     });
 
     // create organisation

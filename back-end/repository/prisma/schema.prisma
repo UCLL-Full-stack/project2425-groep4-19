@@ -25,6 +25,8 @@ model StockItem {
     quantity    Int
     organisationId Int?
     organisation Organisation? @relation(fields: [organisationId], references: [id])
+    tags    StockItemTag[]  @relation("StockItemTags")
+    tagRelations StockItemTagRelation[]
 }
 
 //Todo name unique?
@@ -33,4 +35,21 @@ model Organisation {
     name    String
     users  User[]
     stockItems StockItem[]
+}
+
+model StockItemTag {
+    id      Int     @id @default(autoincrement())
+    name    String
+    color   String
+    stockItems StockItem[] @relation("StockItemTags")
+    tagRelations StockItemTagRelation[]
+}
+
+model StockItemTagRelation {
+  stockItemId Int
+  stockItem   StockItem @relation(fields: [stockItemId], references: [id])
+  stockItemTagId Int
+  stockItemTag StockItemTag @relation(fields: [stockItemTagId], references: [id])
+
+  @@id([stockItemId, stockItemTagId])
 }

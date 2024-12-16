@@ -19,3 +19,9 @@ export type StockItem = {
     quantity?: number;
     organisation?: Organisation;
 };
+
+export type StockItemTag = {
+    id?: number;
+    name?: string;
+    color?: string;
+};

@@ -1,5 +1,6 @@
 import { StockItem as StockItemPrisma } from '@prisma/client';
 import { Organisation } from './organisation';
+import { StockItemTag } from './stockItemTag';
 
 export class StockItem {
     readonly id: number;
@@ -7,6 +8,7 @@ export class StockItem {
     readonly quantity: number;
     readonly organisationId: number | null;
     readonly organisation?: Organisation;
+    readonly tags?: StockItemTag[];
 
     constructor(stockItem: {
         id: number;
@@ -14,6 +16,7 @@ export class StockItem {
         quantity: number;
         organisationId: number | null;
         organisation?: Organisation;
+        tags?: StockItemTag[];
     }) {
         this.validate(stockItem);
         this.id = stockItem.id;
@@ -21,6 +24,7 @@ export class StockItem {
         this.quantity = stockItem.quantity;
         this.organisationId = stockItem.organisationId;
         this.organisation = stockItem.organisation;
+        this.tags = stockItem.tags;
     }
 
     // Validate stock item input
@@ -38,7 +42,8 @@ export class StockItem {
 
     static from(
         { id, name, quantity, organisationId }: StockItemPrisma,
-        organisation?: Organisation
+        organisation?: Organisation,
+        stockItemTags?: StockItemTag[]
     ): StockItem {
         return new StockItem({
             id,
@@ -46,6 +51,7 @@ export class StockItem {
             quantity,
             organisationId: organisationId ?? null,
             organisation: organisation ?? undefined,
+            tags: stockItemTags ?? undefined,
         });
     }
 }
