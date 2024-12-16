@@ -16,6 +16,9 @@ export type Organisation = {
 export type StockItem = {
     id?: number;
     name?: string;
+    sku?: string;
+    category?: string;
     quantity?: number;
+    updatedAt?: string;
     organisation?: Organisation;
 };
