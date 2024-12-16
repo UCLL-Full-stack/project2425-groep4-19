@@ -1,4 +1,3 @@
-// front-end/stockk/pages/stock/index.tsx
 import Navbar from '@components/Header';
 import { AddStockItemButton } from '@components/stock/AddStockItemButton';
 import { AddStockItemPopup } from '@components/stock/AddStockItemPopup';
@@ -91,7 +90,7 @@ export const StockPage = () => {
 
     const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
-        console.log('Filter changed to:', value); // Add this for debugging
+        console.log('Filter changed to:', value); //for debugging
         setFilter(value);
         filterStock(searchTerm, value);
     };
