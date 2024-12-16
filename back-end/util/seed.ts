@@ -8,11 +8,11 @@ dotenv.config();
 const prisma = new PrismaClient();
 
 async function clearDatabase() {
-    await prisma.user.deleteMany();
-    await prisma.organisation.deleteMany();
+    await prisma.stockItemTagRelation.deleteMany();
     await prisma.stockItem.deleteMany();
     await prisma.stockItemTag.deleteMany();
-    await prisma.stockItemTagRelation.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.organisation.deleteMany();
 }
 
 const main = async () => {
@@ -55,14 +55,14 @@ const main = async () => {
     const tag1 = await prisma.stockItemTag.create({
         data: {
             name: 'Tag 1',
-            color: '#EE4B2B',
+            color: '#FFC0CB',
         },
     });
 
     const tag2 = await prisma.stockItemTag.create({
         data: {
             name: 'Tag 2',
-            color: '#33ddff',
+            color: '#ADD8E6',
         },
     });
 

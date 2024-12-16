@@ -18,6 +18,7 @@ export type StockItem = {
     name?: string;
     quantity?: number;
     organisation?: Organisation;
+    tags?: StockItemTag[];
 };
 
 export type StockItemTag = {

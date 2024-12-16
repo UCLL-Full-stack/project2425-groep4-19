@@ -39,6 +39,7 @@ const StockTable: React.FC<StockTableProps> = ({
                         <tr>
                             <th className="py-6 px-4 border-b">Name</th>
                             <th className="py-6 px-4 border-b">Quantity</th>
+                            <th className="py-6 px-4 border-b">Tags</th>
                             <th className="py-6 px-4 border-b">Edit</th>
                             <th className="py-6 px-4 border-b">Delete</th>
                         </tr>
@@ -50,6 +51,7 @@ const StockTable: React.FC<StockTableProps> = ({
                                 className="even:bg-gray-50 odd:bg-gray-200 text-2xl font-medium"
                             >
                                 <td className="py-5 px-4 border">{stockItem.name}</td>
+
                                 <td className="py-5 px-4 border">
                                     <form>
                                         <input
@@ -64,6 +66,27 @@ const StockTable: React.FC<StockTableProps> = ({
                                             }
                                         />
                                     </form>
+                                </td>
+                                <td className="py-5 px-4 border">
+                                    {stockItem.tags && stockItem.tags.length > 0 ? (
+                                        <ul className="items-center text-center flex flex-row gap-x-4">
+                                            {stockItem.tags.map((tag) => (
+                                                <li key={tag.id}>
+                                                    <div
+                                                        style={{
+                                                            background: tag.color,
+                                                            opacity: 0.95,
+                                                        }}
+                                                        className="rounded-md px-2 py-1 text-black"
+                                                    >
+                                                        {tag.name}
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        'No tags'
+                                    )}
                                 </td>
                                 <td>
                                     <div className="flex flex-row justify-center items-center">
