@@ -79,8 +79,15 @@ const updateStockItemQuantityById = async (id: number, quantity: number): Promis
         const updatedStockItem = await database.stockItem.update({
             where: { id: id },
             data: { quantity: quantity },
+            include: { tagRelations: { include: { stockItemTag: true } } }, // Include the tags in the query
         });
-        return StockItem.from(updatedStockItem);
+        return StockItem.from(
+            updatedStockItem,
+            undefined,
+            updatedStockItem.tagRelations.map((relation) =>
+                StockItemTag.from(relation.stockItemTag)
+            )
+        );
     } catch (error) {
         throw new Error(`Error updating stock item: ${error}`);
     }
@@ -95,8 +102,15 @@ const updateStockItemById = async (
         const updatedStockItem = await database.stockItem.update({
             where: { id: id },
             data: { name: name, quantity: quantity },
+            include: { tagRelations: { include: { stockItemTag: true } } }, // Include the tags in the query
         });
-        return StockItem.from(updatedStockItem);
+        return StockItem.from(
+            updatedStockItem,
+            undefined,
+            updatedStockItem.tagRelations.map((relation) =>
+                StockItemTag.from(relation.stockItemTag)
+            )
+        );
     } catch (error) {
         throw new Error(`Error updating stock item: ${error}`);
     }
