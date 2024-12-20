@@ -11,37 +11,24 @@ import React, { useEffect, useState } from 'react';
 export const StockPage = () => {
     const [organisationName, setOrganisationName] = React.useState<string>('');
     const [stock, setStock] = React.useState<StockItem[]>([]);
-    const [isNewItemPopupVisible, setIsNewItemPopupVisible] = useState(false);
-    const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
-    const [editingStockItem, setEditingStockItem] = useState<StockItem | null>(null);
-    const [IsDeletePopUpVisible, setIsDeletePopUpVisible] = useState(false);
-    const [deletingStockItem, setDeletingStockItem] = useState<StockItem | null>(null);
+    const [filteredStock, setFilteredStock] = React.useState<StockItem[]>([]);
+    const [searchTerm, setSearchTerm] = React.useState<string>('');
+    const [isNewItemPopupVisible, setIsNewItemPopupVisible] = React.useState<boolean>(false);
+    const [isEditPopupVisible, setIsEditPopupVisible] = React.useState<boolean>(false);
+    const [isDeletePopUpVisible, setIsDeletePopUpVisible] = React.useState<boolean>(false);
+    const [editingStockItem, setEditingStockItem] = React.useState<StockItem | null>(null);
+    const [deletingStockItem, setDeletingStockItem] = React.useState<StockItem | null>(null);
 
     useEffect(() => {
         const orgName = sessionStorage.getItem('organisationName');
         if (orgName) {
-            // set name and remove quotes from the string
             const parsedName = orgName.replace(/["]+/g, '');
-
             setOrganisationName(parsedName);
-            console.log('Organisation name:', parsedName);
-
-            // fetch stock items by organisation name
             const fetchStock = async () => {
-                console.log('Fetching stock for organisation:', parsedName);
-
-                if (!parsedName) {
-                    throw new Error('No organisation name');
-                }
-
-                // fetch stock items
-                const stockItems =
-                    await StockItemService.getAllStockItemsOfOrganisationByOrganisationName(
-                        parsedName
-                    );
+                const stockItems = await StockItemService.getAllStockItemsOfOrganisationByOrganisationName(parsedName);
                 setStock(stockItems);
+                setFilteredStock(stockItems);
             };
-            // call fetch function
             fetchStock();
         }
     }, []);
@@ -77,6 +64,25 @@ export const StockPage = () => {
         setDeletingStockItem(null);
     };
 
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value.toLowerCase();
+        setSearchTerm(value);
+        filterStock(value);
+    };
+
+    const filterStock = (searchTerm: string) => {
+        let filtered = [...stock]; // Create a new array to avoid mutating the original
+        
+        // Apply search filter
+        if (searchTerm) {
+            filtered = filtered.filter(item =>
+                item.name?.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        setFilteredStock(filtered);
+    };
+
     // Add new item
     const handleAddNewItem = async (name: string, quantity: number) => {
         console.log('Adding new item:', name, quantity);
@@ -88,6 +94,7 @@ export const StockPage = () => {
             quantity
         );
         setStock([...stock, newItem]);
+        filterStock(searchTerm);
     };
 
     // Update item quantity
@@ -100,6 +107,7 @@ export const StockPage = () => {
             item.id === updatedStockItem.id ? updatedStockItem : item
         );
         setStock(updatedStock);
+        filterStock(searchTerm);
     };
 
     // Update item
@@ -110,6 +118,7 @@ export const StockPage = () => {
             item.id === updatedStockItem.id ? updatedStockItem : item
         );
         setStock(updatedStock);
+        filterStock(searchTerm);
     };
 
     // Delete item
@@ -119,6 +128,7 @@ export const StockPage = () => {
         const updatedStock = stock.filter((item) => item.id !== deletedStockItem.id);
         setStock(updatedStock);
         setIsDeletePopUpVisible(false);
+        filterStock(searchTerm);
     };
 
     return (
@@ -128,11 +138,20 @@ export const StockPage = () => {
                 <div className=" min-h-screen pt-3 flex flex-col items-center flex-grow ">
                     <h1 className="mt-2 text-6xl font-bold mb-12">{organisationName} - Stock</h1>
                     <div className="mb-14">
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            value={searchTerm}
+                            onChange={handleSearch}
+                            className="p-2 border rounded-lg"
+                        />
+                    </div>
+                    <div className="mb-14">
                         <AddStockItemButton onOpenPopup={handleOpenNewItemPopup} />
                     </div>
                     {stock && (
                         <StockTable
-                            stock={stock}
+                            stock={filteredStock}
                             handleChangeQuantity={handleChangeQuantity}
                             handleOpenEditPopup={handleOpenEditPopup}
                             handleOpenDeletePopup={handleOpenDeletePopup}
@@ -151,7 +170,7 @@ export const StockPage = () => {
                             handleEditItem={handleEditItem}
                         />
                     )}
-                    {IsDeletePopUpVisible && (
+                    {isDeletePopUpVisible && (
                         <DeleteStockItemPopup
                             handleClosePopup={handleCloseDeletePopup}
                             stockItem={deletingStockItem}
