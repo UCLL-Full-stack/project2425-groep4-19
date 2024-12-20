@@ -13,39 +13,22 @@ export const StockPage = () => {
     const [stock, setStock] = React.useState<StockItem[]>([]);
     const [filteredStock, setFilteredStock] = React.useState<StockItem[]>([]);
     const [searchTerm, setSearchTerm] = React.useState<string>('');
-    const [filter, setFilter] = React.useState<string>('');
-    const [isNewItemPopupVisible, setIsNewItemPopupVisible] = useState(false);
-    const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
-    const [editingStockItem, setEditingStockItem] = useState<StockItem | null>(null);
-    const [IsDeletePopUpVisible, setIsDeletePopUpVisible] = useState(false);
-    const [deletingStockItem, setDeletingStockItem] = useState<StockItem | null>(null);
+    const [isNewItemPopupVisible, setIsNewItemPopupVisible] = React.useState<boolean>(false);
+    const [isEditPopupVisible, setIsEditPopupVisible] = React.useState<boolean>(false);
+    const [isDeletePopUpVisible, setIsDeletePopUpVisible] = React.useState<boolean>(false);
+    const [editingStockItem, setEditingStockItem] = React.useState<StockItem | null>(null);
+    const [deletingStockItem, setDeletingStockItem] = React.useState<StockItem | null>(null);
 
     useEffect(() => {
         const orgName = sessionStorage.getItem('organisationName');
         if (orgName) {
-            // set name and remove quotes from the string
             const parsedName = orgName.replace(/["]+/g, '');
-
             setOrganisationName(parsedName);
-            console.log('Organisation name:', parsedName);
-
-            // fetch stock items by organisation name
             const fetchStock = async () => {
-                console.log('Fetching stock for organisation:', parsedName);
-
-                if (!parsedName) {
-                    throw new Error('No organisation name');
-                }
-
-                // fetch stock items
-                const stockItems =
-                    await StockItemService.getAllStockItemsOfOrganisationByOrganisationName(
-                        parsedName
-                    );
+                const stockItems = await StockItemService.getAllStockItemsOfOrganisationByOrganisationName(parsedName);
                 setStock(stockItems);
-                setFilteredStock(stockItems); 
+                setFilteredStock(stockItems);
             };
-            // call fetch function
             fetchStock();
         }
     }, []);
@@ -80,23 +63,14 @@ export const StockPage = () => {
         setIsDeletePopUpVisible(false);
         setDeletingStockItem(null);
     };
-    
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value.toLowerCase();
         setSearchTerm(value);
-        filterStock(value, filter);
+        filterStock(value);
     };
 
-    const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = event.target.value;
-        console.log('Filter changed to:', value); //for debugging
-        setFilter(value);
-        filterStock(searchTerm, value);
-    };
-
-    
-    const filterStock = (searchTerm: string, filter: string) => {
+    const filterStock = (searchTerm: string) => {
         let filtered = [...stock]; // Create a new array to avoid mutating the original
         
         // Apply search filter
@@ -105,28 +79,7 @@ export const StockPage = () => {
                 item.name?.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
-    
-        // Apply quantity filter
-        switch (filter) {
-            case 'low-stock':
-                filtered = filtered.filter(item => item.quantity < 10);
-                break;
-            case 'high-stock':
-                filtered = filtered.filter(item => item.quantity >= 10);
-                break;
-            case 'recently-updated':
-                filtered = filtered.sort((a, b) => {
-                    const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
-                    const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
-                    return dateB - dateA;
-                });
-                break;
-            default:
-                break;
-        }
-    
-        console.log('Filter applied:', filter);
-        console.log('Filtered stock:', filtered);
+
         setFilteredStock(filtered);
     };
 
@@ -141,7 +94,7 @@ export const StockPage = () => {
             quantity
         );
         setStock([...stock, newItem]);
-        filterStock(searchTerm, filter); 
+        filterStock(searchTerm);
     };
 
     // Update item quantity
@@ -154,7 +107,7 @@ export const StockPage = () => {
             item.id === updatedStockItem.id ? updatedStockItem : item
         );
         setStock(updatedStock);
-        filterStock(searchTerm, filter);
+        filterStock(searchTerm);
     };
 
     // Update item
@@ -165,7 +118,7 @@ export const StockPage = () => {
             item.id === updatedStockItem.id ? updatedStockItem : item
         );
         setStock(updatedStock);
-        filterStock(searchTerm, filter); 
+        filterStock(searchTerm);
     };
 
     // Delete item
@@ -175,7 +128,7 @@ export const StockPage = () => {
         const updatedStock = stock.filter((item) => item.id !== deletedStockItem.id);
         setStock(updatedStock);
         setIsDeletePopUpVisible(false);
-        filterStock(searchTerm, filter);
+        filterStock(searchTerm);
     };
 
     return (
@@ -192,27 +145,17 @@ export const StockPage = () => {
                             onChange={handleSearch}
                             className="p-2 border rounded-lg"
                         />
-                        <select 
-                            value={filter} 
-                            onChange={handleFilterChange} 
-                            className="p-2 border rounded-lg ml-4"
-                        >
-                            <option value="">All</option>
-                            <option value="low-stock">Low Stock</option>
-                            <option value="high-stock">High Stock</option>
-                            <option value="recently-updated">Recently Updated</option>
-                        </select>
                     </div>
                     <div className="mb-14">
                         <AddStockItemButton onOpenPopup={handleOpenNewItemPopup} />
                     </div>
                     {stock && (
                         <StockTable
-                        stock={filteredStock}
-                        handleChangeQuantity={handleChangeQuantity}
-                        handleOpenEditPopup={setEditingStockItem}
-                        handleOpenDeletePopup={setDeletingStockItem}
-                    />  
+                            stock={filteredStock}
+                            handleChangeQuantity={handleChangeQuantity}
+                            handleOpenEditPopup={handleOpenEditPopup}
+                            handleOpenDeletePopup={handleOpenDeletePopup}
+                        />
                     )}
                     {isNewItemPopupVisible && (
                         <AddStockItemPopup
@@ -227,7 +170,7 @@ export const StockPage = () => {
                             handleEditItem={handleEditItem}
                         />
                     )}
-                    {IsDeletePopUpVisible && (
+                    {isDeletePopUpVisible && (
                         <DeleteStockItemPopup
                             handleClosePopup={handleCloseDeletePopup}
                             stockItem={deletingStockItem}
