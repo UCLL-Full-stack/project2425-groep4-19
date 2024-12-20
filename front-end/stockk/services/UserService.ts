@@ -16,6 +16,50 @@ const userLogin = async (user: User) => {
     return response.json();
 };
 
+const userRegister = async (user: User) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(apiUrl + '/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'register failed');
+    }
+    return response.json();
+};
+
+const getUserByUsername = async (username: string) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(apiUrl + '/users/' + username);
+    if (!response.ok) {
+        throw new Error('User not found');
+    }
+    return response.json();
+};
+
+const updateUserRole = async (userId: number, role: string | undefined) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(apiUrl + '/users/update/' + userId.toString(), {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ role }),
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'update role failed');
+    }
+    return response.json();
+};
+
 export default {
     userLogin,
+    userRegister,
+    getUserByUsername,
+    updateUserRole,
 };

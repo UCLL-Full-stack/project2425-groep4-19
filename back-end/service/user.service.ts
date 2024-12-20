@@ -37,19 +37,21 @@ const hashPassword = async (password: string): Promise<string> => {
 };
 
 //* Login user
-const loginUser = async ({ email, password }: UserInput): Promise<string> => {
-    // get user by email
-    const user = userRepository.findByEmail(email);
+const loginUser = async ({ username, password }: UserInput): Promise<string> => {
+    // get user by username
+    const user = await userRepository.findByUsername(username);
     console.log('user found by email: ', user);
     if (!user) {
         throw new Error('Email is incorrect.');
     }
-    const isValidPassword = password === user.password;
+    console.log('password: ', password, 'user.password', user.password);
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
         throw new Error('Password is incorrect.');
     }
-    return generateJwtToken(email);
+    return generateJwtToken(username);
 };
 
 //* Create new user
@@ -58,7 +60,7 @@ const createUser = async ({
     username,
     password,
     role,
-}: UserInput): Promise<{ message: string; user: User }> => {
+}: UserInput): Promise<{ message: string; token: string }> => {
     // Check if user already exists
     const allUsers = await userRepository.getAllUsers();
     if (allUsers.map((user) => user.email).includes(email)) {
@@ -68,21 +70,54 @@ const createUser = async ({
     // Hash password and create user
     const hashedPassword = await hashPassword(password);
     const newUser = new User({ email, username, password: hashedPassword, role });
-    await userRepository.createUser(newUser);
 
-    return { message: 'User registered successfully', user: newUser };
+    await userRepository.createUser(newUser);
+    const token = generateJwtToken(email);
+
+    return { message: 'User registered successfully', token: token };
 };
 
-const getUserRoleByEmail = async (email: string): Promise<string> => {
-    const user = userRepository.findByEmail(email);
+const getUserRoleByUsername = async (username: string): Promise<string> => {
+    const user = await userRepository.findByUsername(username);
     if (!user) {
-        throw new Error('Email is incorrect.');
+        throw new Error('Username is incorrect.');
     }
     return user.role;
+};
+
+const getAllUsers = async (): Promise<User[]> => {
+    return await userRepository.getAllUsers();
+};
+
+const getOrganisationIdByUsername = async (username: string): Promise<number | undefined> => {
+    const user = await userRepository.findByUsername(username);
+    if (!user) {
+        throw new Error('Username is incorrect.');
+    }
+    return user.organisationId;
+};
+
+const getUserByUsername = async (username: string): Promise<User | null> => {
+    const user = await userRepository.findByUsername(username);
+    if (!user) {
+        throw new Error('Username is incorrect.');
+    }
+    return user;
+};
+
+const updateUserRole = async (userId: number, role: string | undefined): Promise<User> => {
+    if (!role) {
+        throw new Error('Role is required.');
+    }
+    return await userRepository.updateUserRole(userId, role);
 };
 
 export default {
     createUser,
     loginUser,
-    getUserRoleByEmail,
+    getUserRoleByUsername,
+    getAllUsers,
+    getOrganisationIdByUsername,
+    getUserByUsername,
+    updateUserRole,
 };

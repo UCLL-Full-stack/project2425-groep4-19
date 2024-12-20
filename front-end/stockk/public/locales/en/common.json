@@ -1,0 +1,12 @@
+{
+    "welcome": "Welcome",
+    "change_language": "Change Language",
+    "login": "Login",
+    "register": "Register",
+    "stock": "Stock",
+    "logout": "Logout",
+    "title": "Demo Project",
+    "description": "Exam app",
+    "welcome_message": "Welcome to Stockk",
+    "login_message": "Please log in or register"
+}

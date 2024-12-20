@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//Todo username unique and email unique
+//Todo role as class?
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String
+  password  String
+  role      String
+  organisationId Int?
+  organisation Organisation? @relation(fields: [organisationId], references: [id])
+}
+
+model StockItem {
+    id      Int     @id @default(autoincrement())
+    name    String
+    quantity    Int
+    organisationId Int?
+    organisation Organisation? @relation(fields: [organisationId], references: [id])
+    tags    StockItemTag[]  @relation("StockItemTags")
+    tagRelations StockItemTagRelation[]
+}
+
+//Todo name unique?
+model Organisation {
+    id      Int     @id @default(autoincrement())
+    name    String
+    users  User[]
+    stockItems StockItem[]
+}
+
+model StockItemTag {
+    id      Int     @id @default(autoincrement())
+    name    String
+    color   String
+    stockItems StockItem[] @relation("StockItemTags")
+    tagRelations StockItemTagRelation[]
+}
+
+model StockItemTagRelation {
+  stockItemId Int
+  stockItem   StockItem @relation(fields: [stockItemId], references: [id])
+  stockItemTagId Int
+  stockItemTag StockItemTag @relation(fields: [stockItemTagId], references: [id])
+
+  @@id([stockItemId, stockItemTagId])
+}

@@ -1,20 +1,23 @@
 import * as dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
-import cors from 'cors';
 import * as bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
+
 import userRouter from './controller/user.routes';
-
-const app: Express = express();
-
 import stockController from './controller/stock.routes';
+import organisationController from './controller/organisation.routes';
+
 import swaggerJsDoc from 'swagger-jsdoc';
 import cors from 'cors';
 
 dotenv.config();
 
-const app = express();
+const app: Express = express();
 const port = process.env.PORT || 3000;
+
+//* Middleware
+app.use(cors({ origin: 'http://localhost:8080' }));
+app.use(bodyParser.json());
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -44,6 +47,8 @@ if (!jwtSecret) {
 
 //* Routes
 app.use('/users', userRouter);
+app.use('/stock', stockController);
+app.use('/organisations', organisationController);
 
 //* Swagger
 const swaggerOpts = {
@@ -57,13 +62,8 @@ const swaggerOpts = {
     apis: ['*controller/*.ts'],
 };
 
-const swaggerSpec = swaggerJSDoc(swaggerOpts);
+const swaggerSpec = swaggerJsDoc(swaggerOpts);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-app.use(cors({ origin: process.env.CORS_ORIGIN }));
-app.use(bodyParser.json());
-
-app.use('/stock', stockController);
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
